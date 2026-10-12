@@ -12,6 +12,7 @@ import { TasksModule } from './modules/tasks/tasks.module.js';
 import { ContentModule } from './modules/content/content.module.js';
 import { SubjectsModule } from './modules/subjects/subjects.module.js';
 import { UsersModule } from './modules/users/users.module.js';
+import { AuthModule } from './modules/auth/auth.module.js';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UsersModule } from './modules/users/users.module.js';
         API_PREFIX: Joi.string().default('api/v1'),
         DATABASE_URL: Joi.string().required(),
         DATABASE_SSL: Joi.boolean().default(true),
+        JWT_SECRET: Joi.string().min(32).required(),
       }),
     }),
     TypeOrmModule.forRootAsync({
@@ -36,6 +38,7 @@ import { UsersModule } from './modules/users/users.module.js';
           'database',
         ),
     }),
+    AuthModule,
     UsersModule,
     SubjectsModule,
     ContentModule,
