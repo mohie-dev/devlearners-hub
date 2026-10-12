@@ -1,9 +1,15 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { CloudinaryModule } from '../cloudinary/cloudinary.module.js';
+import { SubjectsModule } from '../subjects/subjects.module.js';
 import { ContentItem } from './entities/content-item.entity.js';
+import { ContentController } from './content.controller.js';
+import { ContentService } from './content.service.js';
 
 @Module({
-    imports: [TypeOrmModule.forFeature([ContentItem])],
-    exports: [TypeOrmModule],
+    imports: [TypeOrmModule.forFeature([ContentItem]), SubjectsModule, CloudinaryModule],
+    controllers: [ContentController],
+    providers: [ContentService],
+    exports: [ContentService],
 })
 export class ContentModule { }
