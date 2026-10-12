@@ -1,6 +1,6 @@
 export enum UserRole {
-  STUDENT = 'STUDENT',
-  ADMIN = 'ADMIN',
+    STUDENT = 'STUDENT',
+    ADMIN = 'ADMIN',
 }
 
 export enum SubjectStatus {
@@ -43,4 +43,18 @@ export enum TaskStatus {
 export enum TaskProgressStatus {
     PENDING = 'PENDING',
     COMPLETED = 'COMPLETED',
+}
+
+export enum SubjectLevel {
+    FIRST = 1,
+    SECOND = 2,
+    THIRD = 3,
+    FOURTH = 4,
+}
+
+export enum SubjectDepartment {
+    CS = 'CS',
+    IS = 'IS',
+    IT = 'IT',
+    GENERAL = 'GENERAL',
 }
