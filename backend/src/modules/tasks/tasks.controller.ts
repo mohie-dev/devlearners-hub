@@ -86,15 +86,4 @@ export class TasksController {
     async remove(@Param('id', new ParseUUIDPipe()) id: string): Promise<void> {
         await this.tasksService.remove(id);
     }
-
-    @Get('me/tasks')
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
-    @ApiOperation({ summary: 'Get my tasks', description: 'Returns published tasks matching the authenticated student department and study level.' })
-    @ApiBadRequestResponse({ description: 'Complete your academic profile to view tasks' })
-    @ApiUnauthorizedResponse({ description: 'Missing or invalid access token' })
-    @ApiForbiddenResponse({ description: 'This endpoint is available to students only' })
-    findMyTasks(@CurrentUser() user: CurrentUserData) {
-        return this.tasksService.findMyTasks(user.id);
-    }
 }

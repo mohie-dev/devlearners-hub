@@ -14,6 +14,7 @@ import { SubjectsModule } from './modules/subjects/subjects.module.js';
 import { UsersModule } from './modules/users/users.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module.js';
+import { MeModule } from './modules/me/me.module.js';
 
 @Module({
   imports: [
@@ -40,6 +41,7 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module.js';
         ),
     }),
     AuthModule,
+    MeModule,
     UsersModule,
     SubjectsModule,
     ContentModule,

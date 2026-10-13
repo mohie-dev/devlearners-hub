@@ -32,12 +32,4 @@ export class AuthController {
     login(@Body() dto: LoginDto) {
         return this.authService.login(dto);
     }
-
-    @Get('me')
-    @UseGuards(JwtAuthGuard)
-    @ApiBearerAuth()
-    @ApiOperation({ summary: 'Get current user profile', description: 'Returns the profile of the currently authenticated user.' })
-    getMe(@CurrentUser() user: CurrentUserData) {
-        return this.authService.getMe(user.id);
-    }
 }
