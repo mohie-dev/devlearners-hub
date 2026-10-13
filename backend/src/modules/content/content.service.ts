@@ -110,6 +110,16 @@ export class ContentService {
         return content;
     }
 
+    async findOneForTask(id: string): Promise<ContentItem> {
+        const content = await this.contentRepository.findOneBy({ id });
+
+        if (!content) {
+            throw new NotFoundException('Content not found');
+        }
+
+        return content;
+    }
+
     async update(id: string, dto: UpdateContentDto): Promise<ContentItem> {
         if (!Object.keys(dto).length) throw new BadRequestException('At least one field must be provided');
 
