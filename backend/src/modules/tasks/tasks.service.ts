@@ -4,7 +4,6 @@ import { Repository } from 'typeorm';
 import { SubjectStatus, TaskStatus, UserRole } from '../../common/enums.js';
 import { CurrentUserData } from '../../common/interfaces/current-user.interface.js';
 import { ContentService } from '../content/content.service.js';
-import { Subject } from '../subjects/entities/subject.entity.js';
 import { SubjectsService } from '../subjects/subjects.service.js';
 import { User } from '../users/entities/user.entity.js';
 import { UsersService } from '../users/users.service.js';
@@ -103,6 +102,23 @@ export class TasksService {
     async remove(id: string): Promise<void> {
         const task = await this.findOne(id);
         await this.tasksRepository.remove(task);
+    }
+
+    async findPublishedBySubject(subjectId: string): Promise<Task[]> {
+        // This also ensures that the subject exists and is ACTIVE.
+        await this.subjectsService.findOne(subjectId);
+
+        return this.tasksRepository
+            .createQueryBuilder('task')
+            .innerJoinAndSelect('task.subject', 'subject')
+            .leftJoinAndSelect('task.relatedContentItem', 'relatedContentItem')
+            .where('subject.id = :subjectId', { subjectId })
+            .andWhere('task.status = :status', {
+                status: TaskStatus.PUBLISHED,
+            })
+            .orderBy('task.dueAt', 'ASC', 'NULLS LAST')
+            .addOrderBy('task.createdAt', 'DESC')
+            .getMany();
     }
 
     async findMyTasks(userId: string): Promise<Task[]> {

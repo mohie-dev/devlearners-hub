@@ -1,7 +1,7 @@
-import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Patch, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, HttpCode, HttpStatus, Param, ParseUUIDPipe, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import {
     ApiBadRequestResponse, ApiBearerAuth, ApiForbiddenResponse, ApiNoContentResponse,
-    ApiNotFoundResponse, ApiOperation, ApiParam, ApiResponse, ApiTags, ApiUnauthorizedResponse,
+    ApiNotFoundResponse, ApiOperation, ApiParam, ApiQuery, ApiResponse, ApiTags, ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Roles } from '../../common/decorators/roles.decorator.js';
 import { UserRole } from '../../common/enums.js';
@@ -12,6 +12,7 @@ import { CreateTaskDto } from './dto/create-task.dto.js';
 import { UpdateTaskDto } from './dto/update-task.dto.js';
 import { TasksService } from './tasks.service.js';
 import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
+import { FilterTasksDto } from './dto/filter-tasks.dto.js';
 
 @ApiTags('Tasks')
 @Controller('tasks')
@@ -31,6 +32,25 @@ export class TasksController {
     create(@Body() dto: CreateTaskDto, @CurrentUser() user: CurrentUserData) {
         return this.tasksService.create(dto, user);
     }
+
+
+    @Get('browse')
+    @ApiOperation({
+        summary: 'Browse published tasks for an active subject',
+        description: 'Returns published tasks without department or study-level restrictions.',
+    })
+    @ApiQuery({
+        name: 'subjectId',
+        required: true,
+        description: 'Subject UUID',
+        format: 'uuid',
+    })
+    @ApiBadRequestResponse({ description: 'Invalid subject UUID' })
+    @ApiNotFoundResponse({ description: 'Active subject not found' })
+    browse(@Query() query: FilterTasksDto) {
+        return this.tasksService.findPublishedBySubject(query.subjectId);
+    }
+
 
     @Get()
     @UseGuards(JwtAuthGuard, RolesGuard)

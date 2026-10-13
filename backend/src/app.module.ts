@@ -7,7 +7,6 @@ import databaseConfig from './config/db.config.js';
 import { TransformResponseInterceptor } from './common/interceptors/transform-response.interceptor.js';
 import { AppController } from './app.controller.js';
 import { AppService } from './app.service.js';
-import { TaskProgressModule } from './modules/task-progress/task-progress.module.js';
 import { TasksModule } from './modules/tasks/tasks.module.js';
 import { ContentModule } from './modules/content/content.module.js';
 import { SubjectsModule } from './modules/subjects/subjects.module.js';
@@ -15,6 +14,7 @@ import { UsersModule } from './modules/users/users.module.js';
 import { AuthModule } from './modules/auth/auth.module.js';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module.js';
 import { MeModule } from './modules/me/me.module.js';
+import { StudentTasksModule } from './modules/student-tasks/student-tasks.module.js';
 
 @Module({
   imports: [
@@ -46,7 +46,7 @@ import { MeModule } from './modules/me/me.module.js';
     SubjectsModule,
     ContentModule,
     TasksModule,
-    TaskProgressModule,
+    StudentTasksModule,
     CloudinaryModule
   ],
   controllers: [AppController],
