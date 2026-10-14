@@ -1,7 +1,8 @@
 import { ApiResponse } from "@/types";
 import { getAccessToken, clearAuthSession } from "../auth/token";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL || "http://localhost:3000/api/v1";
+const BASE_URL =
+  process.env.NEXT_PUBLIC_API_BASE_URL || "https://devlearners-hub.onrender.com/api/v1";
 
 export class ApiError extends Error {
   code: number;

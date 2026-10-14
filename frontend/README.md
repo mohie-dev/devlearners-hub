@@ -130,7 +130,7 @@ cp .env.example .env.local
 ```
 Ensure `NEXT_PUBLIC_API_BASE_URL` points to your backend instance:
 ```env
-NEXT_PUBLIC_API_BASE_URL=http://localhost:3000/api/v1
+NEXT_PUBLIC_API_BASE_URL=https://devlearners-hub.onrender.com/api/v1
 ```
 
 ### 2. Install Dependencies

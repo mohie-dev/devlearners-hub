@@ -176,7 +176,7 @@ export function SubjectContentList({ subjectId }: SubjectContentListProps) {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => updateFilters({ page: currentPage - 1 })}
+                  onClick={() => updateFilters({ page: currentPage - 1 }, false)}
                   disabled={currentPage <= 1}
                 >
                   Previous
@@ -185,7 +185,7 @@ export function SubjectContentList({ subjectId }: SubjectContentListProps) {
                   type="button"
                   variant="outline"
                   size="sm"
-                  onClick={() => updateFilters({ page: currentPage + 1 })}
+                  onClick={() => updateFilters({ page: currentPage + 1 }, false)}
                   disabled={currentPage >= pagination.totalPages}
                 >
                   Next
