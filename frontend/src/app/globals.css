@@ -43,6 +43,103 @@ body {
   min-height: 100vh;
 }
 
+@keyframes landing-rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes landing-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-7px);
+  }
+}
+
+@keyframes landing-glow {
+  from {
+    opacity: 0.65;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1.06);
+  }
+}
+
+@keyframes landing-progress-fill {
+  from {
+    transform: scaleX(0);
+  }
+  to {
+    transform: scaleX(1);
+  }
+}
+
+.landing-enter {
+  animation: landing-rise 650ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.landing-enter-delay-1 {
+  animation-delay: 120ms;
+}
+
+.landing-enter-delay-2 {
+  animation-delay: 220ms;
+}
+
+.landing-enter-delay-3 {
+  animation-delay: 320ms;
+}
+
+.landing-float {
+  animation: landing-float 5s ease-in-out 800ms infinite;
+}
+
+.landing-orb {
+  animation: landing-glow 9s ease-in-out infinite alternate;
+}
+
+.landing-orb-delay {
+  animation-delay: 1.8s;
+}
+
+.landing-progress {
+  transform-origin: left;
+  animation: landing-progress-fill 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 400ms both;
+}
+
+.landing-card {
+  transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+}
+
+.landing-card:hover {
+  transform: translateY(-4px);
+  border-color: #bdcdef;
+  box-shadow: 0 16px 32px -20px rgb(25 61 160 / 32%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-enter,
+  .landing-float,
+  .landing-orb,
+  .landing-progress {
+    animation: none;
+  }
+
+  .landing-card {
+    transition: none;
+  }
+}
+
 @media (max-width: 639px) {
   input,
   select,

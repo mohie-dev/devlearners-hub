@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { getSafeRedirectPath } from "@/lib/auth/redirect";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -65,7 +66,7 @@ export function RegisterForm() {
         studyLevel: Number(data.studyLevel) as SubjectLevel,
       });
       success("Account created successfully! Welcome to DevLearners Hub.");
-      router.push("/dashboard");
+      router.replace("/dashboard");
     } catch (err: unknown) {
       const error = err as Error;
       setServerError(error.message || "Failed to create account. Please check the details.");

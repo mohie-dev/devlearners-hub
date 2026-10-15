@@ -2,12 +2,12 @@
 
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { meApi } from "@/lib/api/me";
-import { isAuthenticated } from "@/lib/auth/token";
+import { useAuthSession } from "@/hooks/use-auth";
 import { StudentTask, TaskProgressStatus } from "@/types";
 
 export function useMyTasks() {
   const queryClient = useQueryClient();
-  const isAuth = typeof window !== "undefined" ? isAuthenticated() : false;
+  const { isLoggedIn: isAuth } = useAuthSession();
 
   const tasksQuery = useQuery<StudentTask[]>({
     queryKey: ["my-tasks"],

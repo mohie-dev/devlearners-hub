@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { TaskResponse } from "@/types";
 import { useBrowseTasks } from "@/hooks/use-tasks";
 import { useMyTasks } from "@/hooks/use-my-tasks";
-import { useAuth } from "@/hooks/use-auth";
+import { useAuthSession } from "@/hooks/use-auth";
 import { useToast } from "@/components/providers/toast-provider";
 import { TaskCard } from "./task-card";
 import { TaskDetailDialog } from "./task-detail-dialog";
@@ -19,7 +19,7 @@ interface TasksListProps {
 
 export function TasksList({ subjectId }: TasksListProps) {
   const router = useRouter();
-  const { isLoggedIn } = useAuth();
+  const { isLoggedIn } = useAuthSession();
   const { success, error } = useToast();
 
   const { data: tasks, isLoading, isError, error: tasksError, refetch } = useBrowseTasks(subjectId);

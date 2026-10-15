@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
+import { getSafeRedirectPath } from "@/lib/auth/redirect";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -24,7 +25,11 @@ type LoginFormData = z.infer<typeof loginSchema>;
 export function LoginForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const redirectUrl = searchParams.get("redirect") || "/dashboard";
+  const redirectParam = searchParams.get("redirect");
+  const redirectUrl = getSafeRedirectPath(redirectParam);
+  const registerHref = redirectParam
+    ? `/register?redirect=${encodeURIComponent(redirectUrl)}`
+    : "/register";
   const { login } = useAuth();
   const { success } = useToast();
   const [serverError, setServerError] = useState<string | null>(null);
@@ -42,7 +47,7 @@ export function LoginForm() {
     try {
       await login(data);
       success("Welcome back!");
-      router.push(redirectUrl);
+      router.replace(redirectUrl);
     } catch (err: unknown) {
       const error = err as Error;
       setServerError(error.message || "Failed to sign in. Please verify your credentials.");
@@ -101,7 +106,7 @@ export function LoginForm() {
 
           <p className="text-center text-xs text-[#667085]">
             Don&apos;t have an account?{" "}
-            <Link href="/register" className="font-semibold text-[#193DA0] hover:underline">
+            <Link href={registerHref} className="font-semibold text-[#193DA0] hover:underline">
               Create student account
             </Link>
           </p>

@@ -1,41 +1,38 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback, useSyncExternalStore } from "react";
 import { useRouter } from "next/navigation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { authApi, LoginPayload, RegisterPayload } from "@/lib/api/auth";
+import { authApi } from "@/lib/api/auth";
+import type { LoginPayload, RegisterPayload } from "@/lib/api/auth";
 import { meApi } from "@/lib/api/me";
 import {
-  setAccessToken,
-  setStoredUser,
   clearAuthSession,
-  getAccessToken,
-  getStoredUser,
-  isAuthenticated as checkIsAuth,
+  getAuthSessionSnapshot,
+  getServerAuthSessionSnapshot,
+  setAuthSession,
+  subscribeAuthSession,
 } from "@/lib/auth/token";
-import { AuthUser, UserProfile } from "@/types";
+import type { UserProfile } from "@/types";
+
+export function useAuthSession() {
+  return useSyncExternalStore(
+    subscribeAuthSession,
+    getAuthSessionSnapshot,
+    getServerAuthSessionSnapshot,
+  );
+}
 
 export function useAuth() {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const [currentUser, setCurrentUser] = useState<AuthUser | null>(() => {
-    if (typeof window === "undefined") return null;
-    return getStoredUser();
-  });
-
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean>(() => {
-    if (typeof window === "undefined") return false;
-    return !!getAccessToken();
-  });
+  const { user, isLoggedIn } = useAuthSession();
 
   const loginMutation = useMutation({
     mutationFn: (payload: LoginPayload) => authApi.login(payload),
     onSuccess: (data) => {
-      setAccessToken(data.accessToken);
-      setStoredUser(data.user);
-      setCurrentUser(data.user);
-      setIsLoggedIn(true);
+      setAuthSession(data.accessToken, data.user);
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["my-tasks"] });
     },
@@ -44,10 +41,7 @@ export function useAuth() {
   const registerMutation = useMutation({
     mutationFn: (payload: RegisterPayload) => authApi.register(payload),
     onSuccess: (data) => {
-      setAccessToken(data.accessToken);
-      setStoredUser(data.user);
-      setCurrentUser(data.user);
-      setIsLoggedIn(true);
+      setAuthSession(data.accessToken, data.user);
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["my-tasks"] });
     },
@@ -55,14 +49,12 @@ export function useAuth() {
 
   const logout = useCallback(() => {
     clearAuthSession();
-    setCurrentUser(null);
-    setIsLoggedIn(false);
     queryClient.clear();
-    router.push("/login");
+    router.replace("/login");
   }, [queryClient, router]);
 
   return {
-    user: currentUser,
+    user,
     isLoggedIn,
     login: loginMutation.mutateAsync,
     isLoggingIn: loginMutation.isPending,
@@ -75,11 +67,11 @@ export function useAuth() {
 }
 
 export function useProfile() {
-  const isAuth = typeof window !== "undefined" ? checkIsAuth() : false;
+  const { isLoggedIn } = useAuthSession();
 
   return useQuery<UserProfile>({
     queryKey: ["profile"],
     queryFn: () => meApi.getProfile(),
-    enabled: isAuth,
+    enabled: isLoggedIn,
   });
 }

@@ -2,15 +2,14 @@
 
 import React, { Suspense, useEffect } from "react";
 import { useRouter, usePathname } from "next/navigation";
-import { isAuthenticated } from "@/lib/auth/token";
+import { useAuthSession } from "@/hooks/use-auth";
 import { Sidebar } from "@/components/layout/sidebar";
 import { MobileNav } from "@/components/layout/mobile-nav";
 
 function AppLayoutContent({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
-
-  const isAuth = typeof window !== "undefined" ? isAuthenticated() : false;
+  const { isLoggedIn: isAuth } = useAuthSession();
   const isProtected =
     pathname.startsWith("/dashboard") ||
     pathname.startsWith("/my-tasks") ||
