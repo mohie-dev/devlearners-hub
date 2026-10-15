@@ -174,7 +174,53 @@ export default function AdminTasksPage() {
               <p className="text-sm text-[#667085]">No tasks created yet. Author your first task!</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+              <div className="space-y-3 lg:hidden">
+                {tasks.map((task) => (
+                  <article key={task.id} className="rounded-xl border border-[#DCE5F5] bg-white p-4 shadow-xs">
+                    <div className="flex items-start justify-between gap-3">
+                      <h3 className="min-w-0 break-words font-semibold text-[#17194D]">{task.title}</h3>
+                      <Badge
+                        variant={
+                          task.status === "PUBLISHED"
+                            ? "completed"
+                            : task.status === "DRAFT"
+                              ? "pending"
+                              : "outline"
+                        }
+                      >
+                        {task.status}
+                      </Badge>
+                    </div>
+                    <p className="mt-2 line-clamp-2 text-sm leading-relaxed text-[#667085]">
+                      {task.description || "No description"}
+                    </p>
+                    <div className="mt-3 flex flex-wrap items-center gap-2">
+                      <Badge variant="department">{task.academicContext}</Badge>
+                      <span className="flex items-center gap-1 text-xs text-[#667085]">
+                        <Clock className="h-3.5 w-3.5" />
+                        {task.dueAt ? formatDate(task.dueAt) : "No deadline"}
+                      </span>
+                    </div>
+                    <div className="mt-4 flex gap-2">
+                      <Button variant="outline" size="sm" onClick={() => openEditDialog(task)} className="flex-1">
+                        <Edit3 className="h-4 w-4" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleDeleteTask(task.id, task.title)}
+                        className="flex-1"
+                      >
+                        <Trash2 className="h-4 w-4" />
+                        Delete
+                      </Button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <div className="hidden lg:block overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-[#DCE5F5] text-xs font-semibold text-[#667085] uppercase">
@@ -242,7 +288,8 @@ export default function AdminTasksPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
@@ -280,7 +327,7 @@ export default function AdminTasksPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="task-sub">Subject</Label>
                 <select
@@ -314,7 +361,7 @@ export default function AdminTasksPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="task-deadline">Deadline (Optional)</Label>
                 <Input

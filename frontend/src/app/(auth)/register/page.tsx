@@ -11,7 +11,10 @@ export default function RegisterPage() {
           <div className="w-10 h-10 rounded-xl bg-[#193DA0] text-[#FFC329] flex items-center justify-center shadow-xs">
             <GraduationCap className="w-6 h-6" />
           </div>
-          <span className="font-bold text-2xl text-[#17194D]">DevLearners Hub</span>
+          <span className="flex flex-col text-left leading-none">
+            <span className="text-xl font-bold text-[#17194D]">DevLearners</span>
+            <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#193DA0]">Hub</span>
+          </span>
         </Link>
       </div>
 

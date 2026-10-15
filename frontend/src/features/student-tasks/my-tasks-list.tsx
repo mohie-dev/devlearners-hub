@@ -52,10 +52,10 @@ export function MyTasksList() {
     <div className="space-y-6">
       {/* Filters and Counter Bar */}
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 bg-white p-3 rounded-xl border border-[#DCE5F5]">
-        <div className="flex items-center gap-1.5 p-1 bg-[#F2F5FA] rounded-lg border border-[#DCE5F5]">
+        <div className="grid w-full grid-cols-3 gap-1 p-1 bg-[#F2F5FA] rounded-lg border border-[#DCE5F5] sm:flex sm:w-auto sm:items-center sm:gap-1.5">
           <button
             onClick={() => setFilter("ALL")}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all ${
+            className={`min-w-0 px-1.5 py-1.5 rounded-md text-center text-[10px] sm:px-3 sm:text-xs font-medium transition-all ${
               filter === "ALL"
                 ? "bg-white text-[#17194D] shadow-xs font-semibold"
                 : "text-[#667085] hover:text-[#172033]"
@@ -65,7 +65,7 @@ export function MyTasksList() {
           </button>
           <button
             onClick={() => setFilter("PENDING")}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1 ${
+            className={`min-w-0 px-1.5 py-1.5 rounded-md text-[10px] sm:px-3 sm:text-xs font-medium transition-all flex items-center justify-center gap-0.5 sm:gap-1 ${
               filter === "PENDING"
                 ? "bg-white text-amber-700 shadow-xs font-semibold"
                 : "text-[#667085] hover:text-amber-700"
@@ -76,7 +76,7 @@ export function MyTasksList() {
           </button>
           <button
             onClick={() => setFilter("COMPLETED")}
-            className={`px-3 py-1.5 rounded-md text-xs font-medium transition-all flex items-center gap-1 ${
+            className={`min-w-0 px-1.5 py-1.5 rounded-md text-[10px] sm:px-3 sm:text-xs font-medium transition-all flex items-center justify-center gap-0.5 sm:gap-1 ${
               filter === "COMPLETED"
                 ? "bg-white text-emerald-700 shadow-xs font-semibold"
                 : "text-[#667085] hover:text-emerald-700"
@@ -87,8 +87,8 @@ export function MyTasksList() {
           </button>
         </div>
 
-        <Link href="/subjects">
-          <Button variant="outline" size="sm" className="gap-1.5">
+        <Link href="/subjects" className="w-full sm:w-auto">
+          <Button variant="outline" size="sm" className="w-full gap-1.5 sm:w-auto">
             <BookOpen className="w-4 h-4 text-[#193DA0]" />
             <span>Discover More Tasks</span>
           </Button>

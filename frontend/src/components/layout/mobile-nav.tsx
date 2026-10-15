@@ -51,24 +51,31 @@ export function MobileNav() {
           <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#193DA0] text-[#FFC329]">
             <GraduationCap className="w-5 h-5" />
           </div>
-          <span className="font-bold text-white text-base">DevLearners Hub</span>
+          <span className="flex flex-col leading-none">
+            <span className="text-base font-bold text-white">DevLearners</span>
+            <span className="mt-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#FFC329]">Hub</span>
+          </span>
         </Link>
 
         <button
           onClick={() => setIsOpen(!isOpen)}
-          className="p-2 text-slate-300 hover:text-white rounded-lg hover:bg-white/10"
           aria-label="Toggle Navigation"
+          aria-expanded={isOpen}
+          aria-controls="mobile-navigation"
+          className="min-h-11 min-w-11 p-2 text-slate-300 hover:text-white rounded-lg hover:bg-white/10"
         >
           {isOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
         </button>
       </div>
 
       {isOpen && (
-        <div className="px-4 pb-4 pt-2 space-y-3 border-t border-white/10 bg-[#17194D] max-h-[85vh] overflow-y-auto">
+        <div id="mobile-navigation" className="px-4 pb-4 pt-2 space-y-3 border-t border-white/10 bg-[#17194D] max-h-[85vh] overflow-y-auto">
           <div className="space-y-1">
             {STUDENT_NAV_ITEMS.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href;
+              const isActive =
+                pathname === item.href ||
+                (item.href !== "/dashboard" && pathname.startsWith(item.href));
 
               return (
                 <Link
@@ -76,7 +83,7 @@ export function MobileNav() {
                   href={item.href}
                   onClick={() => setIsOpen(false)}
                   className={cn(
-                    "flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all",
+                    "min-h-11 flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all",
                     isActive
                       ? "bg-[#193DA0] text-white font-semibold"
                       : "text-slate-300 hover:text-white hover:bg-white/5"
@@ -104,7 +111,7 @@ export function MobileNav() {
                     href={item.href}
                     onClick={() => setIsOpen(false)}
                     className={cn(
-                      "flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all",
+                      "min-h-11 flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all",
                       isActive
                         ? "bg-[#193DA0] text-white font-semibold"
                         : "text-slate-300 hover:text-white hover:bg-white/5"

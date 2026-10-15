@@ -48,7 +48,7 @@ export function SubjectFilters({ filters, onChange }: SubjectFiltersProps) {
               placeholder="Search subjects by name or code..."
               value={filters.search || ""}
               onChange={handleSearchChange}
-              className="flex h-10 w-full rounded-lg border border-[#DCE5F5] bg-white pl-9 pr-3 py-2 text-sm text-[#172033] placeholder:text-[#667085]/60 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#193DA0] transition-all"
+              className="flex h-10 w-full rounded-lg border border-[#DCE5F5] bg-white pl-9 pr-3 py-2 text-sm text-[#172033] placeholder:text-[#667085]/60 focus-visible:outline-none focus-visible:border-[#193DA0] focus-visible:ring-2 focus-visible:ring-[#193DA0]/20 transition-colors duration-150"
             />
           </div>
         </div>
@@ -58,7 +58,7 @@ export function SubjectFilters({ filters, onChange }: SubjectFiltersProps) {
           <select
             value={filters.department || ""}
             onChange={handleDepartmentChange}
-            className="flex h-10 w-full rounded-lg border border-[#DCE5F5] bg-white px-3 py-2 text-sm text-[#172033] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#193DA0] transition-all"
+            className="flex h-10 w-full rounded-lg border border-[#DCE5F5] bg-white px-3 py-2 text-sm text-[#172033] focus-visible:outline-none focus-visible:border-[#193DA0] focus-visible:ring-2 focus-visible:ring-[#193DA0]/20 transition-colors duration-150"
           >
             <option value="">All Departments</option>
             <option value="CS">Computer Science (CS)</option>
@@ -73,7 +73,7 @@ export function SubjectFilters({ filters, onChange }: SubjectFiltersProps) {
           <select
             value={filters.level || ""}
             onChange={handleLevelChange}
-            className="flex h-10 w-full rounded-lg border border-[#DCE5F5] bg-white px-3 py-2 text-sm text-[#172033] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#193DA0] transition-all"
+            className="flex h-10 w-full rounded-lg border border-[#DCE5F5] bg-white px-3 py-2 text-sm text-[#172033] focus-visible:outline-none focus-visible:border-[#193DA0] focus-visible:ring-2 focus-visible:ring-[#193DA0]/20 transition-colors duration-150"
           >
             <option value="">All Academic Levels</option>
             <option value="1">Level 1 (First Year)</option>

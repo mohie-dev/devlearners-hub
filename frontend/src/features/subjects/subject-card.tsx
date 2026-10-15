@@ -12,19 +12,19 @@ interface SubjectCardProps {
 
 export function SubjectCard({ subject }: SubjectCardProps) {
   return (
-    <Card className="flex flex-col h-full hover:shadow-md transition-all hover:border-[#193DA0]/40 group">
+    <Card className="flex h-full flex-col border-[#DCE5F5] shadow-sm transition-[border-color,box-shadow] duration-150 ease-out hover:border-[#B8CAEC] hover:shadow-md focus-within:border-[#193DA0] focus-within:shadow-md motion-reduce:transition-none">
       <CardHeader className="pb-3">
-        <div className="flex items-center justify-between gap-2 mb-2">
+        <div className="mb-2 flex items-center justify-between gap-2">
           <Badge variant="department">{subject.department}</Badge>
           <Badge variant="level">Level {subject.level}</Badge>
         </div>
-        <div className="flex items-start gap-2.5">
-          <div className="p-2 rounded-lg bg-[#193DA0]/10 text-[#193DA0] mt-0.5 group-hover:bg-[#193DA0] group-hover:text-white transition-colors">
-            <BookOpen className="w-5 h-5" />
+        <div className="flex min-w-0 items-start gap-2.5">
+          <div className="mt-0.5 rounded-lg bg-[#193DA0]/10 p-2 text-[#193DA0]">
+            <BookOpen className="h-5 w-5" />
           </div>
-          <div>
-            <CardTitle className="text-base line-clamp-1">{subject.name}</CardTitle>
-            <span className="text-xs font-mono text-[#667085] uppercase tracking-wide">
+          <div className="min-w-0">
+            <CardTitle className="line-clamp-2 text-base text-[#17194D]">{subject.name}</CardTitle>
+            <span className="font-mono text-xs uppercase tracking-wide text-[#667085]">
               {subject.code}
             </span>
           </div>
@@ -32,16 +32,16 @@ export function SubjectCard({ subject }: SubjectCardProps) {
       </CardHeader>
 
       <CardContent className="flex-1 pb-4">
-        <p className="text-sm text-[#667085] line-clamp-3 leading-relaxed">
+        <p className="line-clamp-3 text-sm leading-relaxed text-[#667085]">
           {subject.description || "No description provided for this subject."}
         </p>
       </CardContent>
 
       <CardFooter className="pt-3">
         <Link href={`/subjects/${subject.id}`} className="w-full">
-          <Button variant="outline" className="w-full group-hover:bg-[#193DA0] group-hover:text-white transition-all">
+          <Button variant="outline" className="w-full gap-2 transition-colors duration-150 motion-reduce:transition-none">
             <span>Browse Content & Tasks</span>
-            <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+            <ArrowRight className="h-4 w-4" />
           </Button>
         </Link>
       </CardFooter>

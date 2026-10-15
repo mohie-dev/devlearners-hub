@@ -226,7 +226,65 @@ export default function AdminContentPage() {
               <p className="text-sm text-[#667085]">No study materials uploaded yet.</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+              <div className="space-y-3 lg:hidden">
+                {items.map((item) => (
+                  <article key={item.id} className="rounded-xl border border-[#DCE5F5] bg-white p-4 shadow-xs">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <h3 className="break-words font-semibold text-[#17194D]">{item.title}</h3>
+                        <p className="mt-1 text-xs font-medium text-[#193DA0]">
+                          {item.subject?.name || "Subject"}
+                        </p>
+                      </div>
+                      <Badge variant="department">{item.resourceType}</Badge>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      <Badge variant="outline">{item.academicContext}</Badge>
+                      <Badge variant="outline">
+                        {item.sourceType === "UPLOAD" ? "Cloud File" : "External Link"}
+                      </Badge>
+                    </div>
+                    {item.description && (
+                      <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-[#667085]">
+                        {item.description}
+                      </p>
+                    )}
+                    <div className="mt-4 grid grid-cols-2 gap-2">
+                      {item.resourceUrl ? (
+                        <a href={item.resourceUrl} target="_blank" rel="noopener noreferrer" className="block">
+                          <Button variant="outline" size="sm" className="w-full">
+                            {item.sourceType === "UPLOAD" ? (
+                              <Download className="h-4 w-4" />
+                            ) : (
+                              <ExternalLink className="h-4 w-4" />
+                            )}
+                            View
+                          </Button>
+                        </a>
+                      ) : (
+                        <Button variant="outline" size="sm" disabled>
+                          Not available
+                        </Button>
+                      )}
+                      <Button variant="outline" size="sm" onClick={() => openEditDialog(item)} className="w-full">
+                        <Pencil className="h-4 w-4" />
+                        Edit
+                      </Button>
+                      <Button
+                        variant="destructive"
+                        size="sm"
+                        onClick={() => handleArchiveContent(item.id, item.title)}
+                        className="col-span-2 w-full"
+                      >
+                        <Archive className="h-4 w-4" />
+                        Archive
+                      </Button>
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <div className="hidden lg:block overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-[#DCE5F5] text-xs font-semibold text-[#667085] uppercase">
@@ -294,7 +352,8 @@ export default function AdminContentPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
@@ -319,7 +378,7 @@ export default function AdminContentPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="content-sub">Subject</Label>
                 <select
@@ -353,7 +412,7 @@ export default function AdminContentPage() {
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="content-source">Source Type</Label>
                 <select
@@ -475,7 +534,7 @@ export default function AdminContentPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="edit-content-subject">Subject</Label>
                 <select

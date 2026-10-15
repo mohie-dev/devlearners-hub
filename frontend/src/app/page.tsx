@@ -10,7 +10,6 @@ import {
   CheckCircle2,
   Calendar,
   ArrowRight,
-  Sparkles,
 } from "lucide-react";
 
 function HomeContent() {
@@ -24,15 +23,19 @@ function HomeContent() {
       {/* Top Navbar */}
       <header className="bg-white border-b border-[#DCE5F5] sticky top-0 z-30">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-[#193DA0] text-[#FFC329] flex items-center justify-center shadow-xs">
-              <GraduationCap className="w-6 h-6" />
+          <Link
+            href={isAuth ? "/dashboard" : "/"}
+            aria-label="DevLearners Hub home"
+            className="flex items-center gap-3 hover:opacity-90 transition-opacity"
+          >
+            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-[#193DA0] text-[#FFC329] shadow-xs">
+              <GraduationCap className="h-6 w-6" />
             </div>
-            <div>
-              <span className="font-bold text-lg text-[#17194D]">DevLearners</span>{" "}
-              <span className="font-bold text-lg text-[#193DA0]">Hub</span>
+            <div className="flex flex-col leading-none">
+              <span className="text-lg font-bold text-[#17194D]">DevLearners</span>
+              <span className="mt-1 text-[10px] font-semibold uppercase tracking-[0.18em] text-[#193DA0]">Hub</span>
             </div>
-          </div>
+          </Link>
 
           <div className="flex items-center gap-3">
             {isAuth ? (
@@ -59,9 +62,9 @@ function HomeContent() {
       </header>
 
       {/* Hero Section */}
-      <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-16 sm:py-24 flex flex-col items-center text-center">
+      <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 py-10 sm:py-24 flex flex-col items-center text-center">
 
-        <h1 className="text-4xl sm:text-5xl font-extrabold tracking-tight text-[#17194D] max-w-3xl leading-[1.15]">
+        <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-[#17194D] max-w-3xl leading-[1.15]">
           Master Your Courses, Track Tasks, and Hit Deadlines Confidently
         </h1>
 
@@ -69,15 +72,15 @@ function HomeContent() {
           DevLearners Hub allows students to explore academic subjects, pick tasks directly into their personal learning plan, and monitor real-time completion progress.
         </p>
 
-        <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
-          <Link href={isAuth ? "/dashboard" : "/register"}>
-            <Button size="lg" className="gap-2 shadow-md">
+        <div className="mt-8 flex w-full flex-col items-stretch justify-center gap-3 sm:w-auto sm:flex-row sm:items-center sm:gap-4">
+          <Link href={isAuth ? "/dashboard" : "/register"} className="w-full sm:w-auto">
+            <Button size="lg" className="w-full gap-2 shadow-md sm:w-auto">
               <span>{isAuth ? "Open My Dashboard" : "Create Student Account"}</span>
               <ArrowRight className="w-4 h-4" />
             </Button>
           </Link>
-          <Link href="/subjects">
-            <Button variant="outline" size="lg" className="gap-2">
+          <Link href="/subjects" className="w-full sm:w-auto">
+            <Button variant="outline" size="lg" className="w-full gap-2 sm:w-auto">
               <BookOpen className="w-4 h-4" />
               <span>Browse Subjects</span>
             </Button>
@@ -85,8 +88,8 @@ function HomeContent() {
         </div>
 
         {/* Feature Highlights Grid */}
-        <div className="mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
-          <div className="bg-white p-6 rounded-2xl border border-[#DCE5F5] shadow-xs">
+        <div className="mt-12 sm:mt-20 grid grid-cols-1 md:grid-cols-3 gap-6 w-full text-left">
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#DCE5F5] shadow-xs">
             <div className="w-10 h-10 rounded-xl bg-blue-50 text-[#193DA0] flex items-center justify-center mb-4">
               <BookOpen className="w-5 h-5" />
             </div>
@@ -96,7 +99,7 @@ function HomeContent() {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-[#DCE5F5] shadow-xs">
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#DCE5F5] shadow-xs">
             <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center mb-4">
               <Calendar className="w-5 h-5" />
             </div>
@@ -106,7 +109,7 @@ function HomeContent() {
             </p>
           </div>
 
-          <div className="bg-white p-6 rounded-2xl border border-[#DCE5F5] shadow-xs">
+          <div className="bg-white p-5 sm:p-6 rounded-2xl border border-[#DCE5F5] shadow-xs">
             <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-4">
               <CheckCircle2 className="w-5 h-5" />
             </div>

@@ -40,15 +40,15 @@ export function ProfileCard() {
   return (
     <Card className="max-w-2xl mx-auto shadow-sm">
       <CardHeader className="border-b border-[#DCE5F5] pb-6">
-        <div className="flex items-center gap-4">
-          <div className="w-16 h-16 rounded-2xl bg-[#193DA0] text-[#FFC329] flex items-center justify-center font-bold text-2xl shadow-sm">
+        <div className="flex min-w-0 items-start gap-3 sm:items-center sm:gap-4">
+          <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[#193DA0] text-2xl font-bold text-[#FFC329] shadow-sm sm:h-16 sm:w-16">
             {profile.fullName.charAt(0).toUpperCase()}
           </div>
-          <div>
-            <CardTitle className="text-xl text-[#17194D]">{profile.fullName}</CardTitle>
-            <div className="text-xs text-[#667085] flex items-center gap-2 mt-1">
-              <span>{profile.email}</span>
-              <span>•</span>
+          <div className="min-w-0 flex-1">
+            <CardTitle className="break-words text-xl text-[#17194D]">{profile.fullName}</CardTitle>
+            <div className="mt-1 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs text-[#667085]">
+              <span className="break-all">{profile.email}</span>
+              <span aria-hidden="true">•</span>
               <Badge variant="accent">{profile.role}</Badge>
             </div>
           </div>

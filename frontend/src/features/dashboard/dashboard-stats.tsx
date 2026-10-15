@@ -38,7 +38,7 @@ export function DashboardStats() {
   return (
     <div className="space-y-8">
       {/* Welcome Banner */}
-      <div className="relative overflow-hidden rounded-2xl bg-[#17194D] text-white p-6 sm:p-8 shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl bg-[#17194D] text-white p-5 sm:p-8 shadow-sm">
         <div className="relative z-10 max-w-2xl space-y-2">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#FFC329] text-xs font-semibold backdrop-blur-xs">
             <Sparkles className="w-3.5 h-3.5" />
@@ -82,7 +82,7 @@ export function DashboardStats() {
       </div>
 
       {/* Real Statistics Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-2 sm:gap-4 lg:grid-cols-4 lg:gap-6">
         {/* Total Tasks */}
         <Card className="hover:shadow-xs transition-shadow">
           <CardHeader className="flex flex-row items-center justify-between pb-2">
@@ -244,7 +244,7 @@ export function DashboardStats() {
                 {pendingTasks.slice(0, 4).map((pt) => (
                   <div
                     key={pt.id}
-                    className="flex items-center justify-between p-3 rounded-xl border border-[#DCE5F5] bg-[#F2F5FA]/50"
+                    className="flex flex-col items-start gap-2 p-3 rounded-xl border border-[#DCE5F5] bg-[#F2F5FA]/50 sm:flex-row sm:items-center sm:justify-between"
                   >
                     <div className="flex items-center gap-3 overflow-hidden">
                       <div className="w-2 h-2 rounded-full bg-amber-500 shrink-0" />

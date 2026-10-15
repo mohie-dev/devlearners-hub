@@ -25,7 +25,7 @@ function SubjectDetailContent({ subjectId }: { subjectId: string }) {
   return (
     <div className="space-y-6">
       {/* Back button */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
         <Link href="/subjects">
           <Button variant="ghost" size="sm" className="gap-1.5 -ml-2 text-[#667085] hover:text-[#172033]">
             <ArrowLeft className="w-4 h-4" />
@@ -34,15 +34,15 @@ function SubjectDetailContent({ subjectId }: { subjectId: string }) {
         </Link>
 
         {isAdmin && (
-          <div className="flex items-center gap-2">
-            <Link href={`/admin/tasks?subjectId=${subjectId}`}>
-              <Button size="sm" variant="outline" className="gap-1.5 text-xs">
+          <div className="grid grid-cols-2 gap-2 sm:flex">
+            <Link href={`/admin/tasks?subjectId=${subjectId}`} className="w-full sm:w-auto">
+              <Button size="sm" variant="outline" className="w-full gap-1.5 text-xs">
                 <PlusCircle className="w-3.5 h-3.5" />
                 <span>Create Task</span>
               </Button>
             </Link>
-            <Link href={`/admin/content?subjectId=${subjectId}`}>
-              <Button size="sm" className="gap-1.5 text-xs">
+            <Link href={`/admin/content?subjectId=${subjectId}`} className="w-full sm:w-auto">
+              <Button size="sm" className="w-full gap-1.5 text-xs">
                 <PlusCircle className="w-3.5 h-3.5" />
                 <span>Upload Content</span>
               </Button>
@@ -88,28 +88,30 @@ function SubjectDetailContent({ subjectId }: { subjectId: string }) {
 
       {/* Tab Switcher: Tasks vs Study Materials */}
       <div className="space-y-6">
-        <div className="flex items-center gap-2 border-b border-[#DCE5F5] pb-px">
+        <div className="grid grid-cols-2 gap-1 border-b border-[#DCE5F5] pb-px sm:flex sm:items-center sm:gap-2">
           <button
             onClick={() => setActiveTab("content")}
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 transition-all cursor-pointer ${
+            className={`flex min-w-0 w-full items-center justify-center gap-1.5 px-2 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer sm:w-auto sm:gap-2 sm:px-4 sm:text-sm ${
               activeTab === "content"
                 ? "border-[#193DA0] text-[#193DA0]"
                 : "border-transparent text-[#667085] hover:text-[#172033]"
             }`}
           >
             <FileText className="w-4 h-4" />
-            <span>Study Materials & Content</span>
+            <span className="sm:hidden">Content</span>
+            <span className="hidden sm:inline">Study Materials & Content</span>
           </button>
           <button
             onClick={() => setActiveTab("tasks")}
-            className={`flex items-center gap-2 px-4 py-2.5 text-sm font-semibold border-b-2 transition-all cursor-pointer ${
+            className={`flex min-w-0 w-full items-center justify-center gap-1.5 px-2 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer sm:w-auto sm:gap-2 sm:px-4 sm:text-sm ${
               activeTab === "tasks"
                 ? "border-[#193DA0] text-[#193DA0]"
                 : "border-transparent text-[#667085] hover:text-[#172033]"
             }`}
           >
             <CheckSquare className="w-4 h-4" />
-            <span>Course Tasks</span>
+            <span className="sm:hidden">Tasks</span>
+            <span className="hidden sm:inline">Course Tasks</span>
           </button>
         </div>
 

@@ -157,7 +157,56 @@ export default function AdminSubjectsPage() {
               <p className="text-sm text-[#667085]">No subjects found. Create your first subject!</p>
             </div>
           ) : (
-            <div className="overflow-x-auto">
+            <>
+              <div className="space-y-3 lg:hidden">
+                {subjects.map((subject) => (
+                  <article key={subject.id} className="rounded-xl border border-[#DCE5F5] bg-white p-4 shadow-xs">
+                    <div className="flex items-start justify-between gap-3">
+                      <div className="min-w-0">
+                        <p className="font-mono text-xs font-bold text-[#193DA0]">{subject.code}</p>
+                        <Link href={`/subjects/${subject.id}`} className="mt-1 block break-words font-semibold text-[#17194D]">
+                          {subject.name}
+                        </Link>
+                      </div>
+                      <Badge variant={subject.status === "ACTIVE" ? "completed" : "outline"}>
+                        {subject.status}
+                      </Badge>
+                    </div>
+                    <div className="mt-3 flex flex-wrap gap-1.5">
+                      <Badge variant="department">{subject.department}</Badge>
+                      <Badge variant="level">Level {subject.level}</Badge>
+                    </div>
+                    {subject.description && (
+                      <p className="mt-3 line-clamp-2 text-sm leading-relaxed text-[#667085]">
+                        {subject.description}
+                      </p>
+                    )}
+                    <div className="mt-4 flex gap-2">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => openEditDialog(subject)}
+                        className="flex-1"
+                      >
+                        <Edit3 className="h-4 w-4" />
+                        Edit
+                      </Button>
+                      {subject.status === "ACTIVE" && (
+                        <Button
+                          variant="destructive"
+                          size="sm"
+                          onClick={() => handleArchiveSubject(subject.id, subject.name)}
+                          className="flex-1"
+                        >
+                          <Archive className="h-4 w-4" />
+                          Archive
+                        </Button>
+                      )}
+                    </div>
+                  </article>
+                ))}
+              </div>
+              <div className="hidden lg:block overflow-x-auto">
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-[#DCE5F5] text-xs font-semibold text-[#667085] uppercase">
@@ -215,7 +264,8 @@ export default function AdminSubjectsPage() {
                   ))}
                 </tbody>
               </table>
-            </div>
+              </div>
+            </>
           )}
         </CardContent>
       </Card>
@@ -263,7 +313,7 @@ export default function AdminSubjectsPage() {
               />
             </div>
 
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
               <div className="space-y-1.5">
                 <Label htmlFor="sub-dept">Department</Label>
                 <select
