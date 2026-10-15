@@ -91,6 +91,7 @@ export interface FilterContentParams {
   subjectId?: string;
   academicContext?: AcademicContext;
   resourceType?: ResourceType;
+  sourceType?: ContentSourceType;
   search?: string;
   page?: number;
   limit?: number;

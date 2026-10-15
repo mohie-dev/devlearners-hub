@@ -14,6 +14,7 @@ export const contentApi = {
         subjectId: params?.subjectId,
         academicContext: params?.academicContext,
         resourceType: params?.resourceType,
+        sourceType: params?.sourceType,
         search: params?.search,
         page: params?.page,
         limit: params?.limit,

@@ -5,19 +5,47 @@ import { readFile } from "node:fs/promises";
 
 const require = createRequire(import.meta.url);
 const ts = require("typescript");
-const tokenSource = await readFile(new URL("../src/lib/auth/token.ts", import.meta.url), "utf8");
-const compiledToken = ts.transpileModule(tokenSource, {
-  compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
-}).outputText;
-const tokenExports = {};
-new Function("exports", compiledToken)(tokenExports);
+
+async function loadTypeScriptModule(path) {
+  const source = await readFile(new URL(path, import.meta.url), "utf8");
+  const compiled = ts.transpileModule(source, {
+    compilerOptions: { module: ts.ModuleKind.CommonJS, target: ts.ScriptTarget.ES2020 },
+  }).outputText;
+  const exports = {};
+  new Function("exports", compiled)(exports);
+  return exports;
+}
+
+const tokenModule = await loadTypeScriptModule("../src/lib/auth/token.ts");
+const academicProfileModule = await loadTypeScriptModule("../src/lib/auth/academic-profile.ts");
+const redirectModule = await loadTypeScriptModule("../src/lib/auth/redirect.ts");
 
 const {
   clearAuthSession,
   getAuthSessionSnapshot,
   setAuthSession,
   subscribeAuthSession,
-} = tokenExports;
+} = tokenModule;
+const { isDepartmentSelectionAllowed, resolveRegistrationDepartment } = academicProfileModule;
+const { getSafeRedirectPath } = redirectModule;
+
+test("only Levels 3 and 4 allow department selection", () => {
+  for (const level of [1, 2]) {
+    assert.equal(isDepartmentSelectionAllowed(level), false);
+    assert.equal(resolveRegistrationDepartment(level, "CS"), "GENERAL");
+  }
+
+  assert.equal(isDepartmentSelectionAllowed(3), true);
+  assert.equal(resolveRegistrationDepartment(3, "CS"), "CS");
+  assert.equal(isDepartmentSelectionAllowed(4), true);
+  assert.equal(resolveRegistrationDepartment(4, "IT"), "IT");
+});
+
+test("auth redirects stay within the app", () => {
+  assert.equal(getSafeRedirectPath("/subjects/123?tab=content"), "/subjects/123?tab=content");
+  assert.equal(getSafeRedirectPath("https://outside.example"), "/dashboard");
+  assert.equal(getSafeRedirectPath("//outside.example"), "/dashboard");
+});
 
 test("auth-session subscribers update immediately after sign-in and logout", () => {
   const previousWindow = Object.getOwnPropertyDescriptor(globalThis, "window");

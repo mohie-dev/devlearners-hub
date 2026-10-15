@@ -76,6 +76,7 @@ export class ContentService {
         if (query.subjectId) qb.andWhere('subject.id = :subjectId', { subjectId: query.subjectId });
         if (query.academicContext) qb.andWhere('content.academicContext = :academicContext', { academicContext: query.academicContext });
         if (query.resourceType) qb.andWhere('content.resourceType = :resourceType', { resourceType: query.resourceType });
+        if (query.sourceType) qb.andWhere('content.sourceType = :sourceType', { sourceType: query.sourceType });
         if (query.search?.trim()) {
             qb.andWhere('(content.title ILIKE :search OR content.description ILIKE :search)', {
                 search: `%${query.search.trim()}%`,

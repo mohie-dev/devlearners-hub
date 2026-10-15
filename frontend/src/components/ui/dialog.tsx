@@ -32,10 +32,10 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 sm:p-6">
       <div
-        className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200"
+        className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 motion-reduce:animate-none motion-reduce:transition-none"
         onClick={() => onOpenChange(false)}
       />
-      <div className="relative z-50 w-full max-w-lg bg-white rounded-2xl border border-[#DCE5F5] shadow-xl overflow-hidden animate-in zoom-in-95 duration-200 max-h-[90vh] flex flex-col">
+      <div className="relative z-50 w-full max-w-lg bg-white rounded-2xl border border-[#DCE5F5] shadow-xl overflow-hidden animate-in zoom-in-95 duration-200 motion-reduce:animate-none max-h-[90vh] flex flex-col">
         {children}
       </div>
     </div>

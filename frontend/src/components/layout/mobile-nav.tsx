@@ -11,13 +11,13 @@ import {
   CheckSquare,
   User,
   LogOut,
-  GraduationCap,
   Shield,
   ListTodo,
   FolderOpen,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
+import { SiteLogo } from "@/components/layout/site-logo";
 
 const STUDENT_NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -45,16 +45,9 @@ export function MobileNav() {
       <div className="flex items-center justify-between px-4 py-3.5">
         <Link
           href={brandHref}
-          aria-label="DevLearners Hub home"
           className="flex items-center gap-2.5 hover:opacity-90 transition-opacity"
         >
-          <div className="flex items-center justify-center w-8 h-8 rounded-lg bg-[#193DA0] text-[#FFC329]">
-            <GraduationCap className="w-5 h-5" />
-          </div>
-          <span className="flex flex-col leading-none">
-            <span className="text-base font-bold text-white">DevLearners</span>
-            <span className="mt-1 text-[9px] font-semibold uppercase tracking-[0.18em] text-[#FFC329]">Hub</span>
-          </span>
+          <SiteLogo variant="primary-dark" className="h-10 w-auto" />
         </Link>
 
         <button
@@ -83,7 +76,7 @@ export function MobileNav() {
                   href={item.href}
                   onClick={() => setIsOpen(false)}
                   className={cn(
-                    "min-h-11 flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all",
+                    "min-h-11 flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors duration-150 ease-out",
                     isActive
                       ? "bg-[#193DA0] text-white font-semibold"
                       : "text-slate-300 hover:text-white hover:bg-white/5"
@@ -111,7 +104,7 @@ export function MobileNav() {
                     href={item.href}
                     onClick={() => setIsOpen(false)}
                     className={cn(
-                      "min-h-11 flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all",
+                      "min-h-11 flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-colors duration-150 ease-out",
                       isActive
                         ? "bg-[#193DA0] text-white font-semibold"
                         : "text-slate-300 hover:text-white hover:bg-white/5"

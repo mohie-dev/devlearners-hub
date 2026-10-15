@@ -14,7 +14,6 @@ import {
   BookOpen,
   Calendar,
   ArrowRight,
-  Sparkles,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 
@@ -40,11 +39,6 @@ export function DashboardStats() {
       {/* Welcome Banner */}
       <div className="relative overflow-hidden rounded-2xl bg-[#17194D] text-white p-5 sm:p-8 shadow-sm">
         <div className="relative z-10 max-w-2xl space-y-2">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/10 text-[#FFC329] text-xs font-semibold backdrop-blur-xs">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Student Learning Workspace</span>
-          </div>
-
           {isLoading ? (
             <div className="space-y-2 py-1">
               <Skeleton className="h-8 w-64 bg-white/20" />

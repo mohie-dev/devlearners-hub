@@ -43,6 +43,21 @@ body {
   min-height: 100vh;
 }
 
+@keyframes page-enter {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.page-enter {
+  animation: page-enter 240ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
 @keyframes landing-rise {
   from {
     opacity: 0;
@@ -51,27 +66,6 @@ body {
   to {
     opacity: 1;
     transform: translateY(0);
-  }
-}
-
-@keyframes landing-float {
-  0%,
-  100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-7px);
-  }
-}
-
-@keyframes landing-glow {
-  from {
-    opacity: 0.65;
-    transform: scale(0.94);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1.06);
   }
 }
 
@@ -85,36 +79,24 @@ body {
 }
 
 .landing-enter {
-  animation: landing-rise 650ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation: landing-rise 360ms cubic-bezier(0.2, 0.7, 0.2, 1) both;
 }
 
 .landing-enter-delay-1 {
-  animation-delay: 120ms;
+  animation-delay: 60ms;
 }
 
 .landing-enter-delay-2 {
-  animation-delay: 220ms;
+  animation-delay: 120ms;
 }
 
 .landing-enter-delay-3 {
-  animation-delay: 320ms;
-}
-
-.landing-float {
-  animation: landing-float 5s ease-in-out 800ms infinite;
-}
-
-.landing-orb {
-  animation: landing-glow 9s ease-in-out infinite alternate;
-}
-
-.landing-orb-delay {
-  animation-delay: 1.8s;
+  animation-delay: 180ms;
 }
 
 .landing-progress {
   transform-origin: left;
-  animation: landing-progress-fill 1.2s cubic-bezier(0.2, 0.7, 0.2, 1) 400ms both;
+  animation: landing-progress-fill 760ms cubic-bezier(0.2, 0.7, 0.2, 1) 180ms both;
 }
 
 .landing-card {
@@ -122,21 +104,24 @@ body {
 }
 
 .landing-card:hover {
-  transform: translateY(-4px);
+  transform: translateY(-2px);
   border-color: #bdcdef;
   box-shadow: 0 16px 32px -20px rgb(25 61 160 / 32%);
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .page-enter,
   .landing-enter,
-  .landing-float,
-  .landing-orb,
   .landing-progress {
     animation: none;
   }
 
   .landing-card {
     transition: none;
+  }
+
+  .landing-card:hover {
+    transform: none;
   }
 }
 

@@ -1,10 +1,16 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
 import { useSubjects } from "@/hooks/use-subjects";
 import { useContent, useContentMutations } from "@/hooks/use-content";
+import {
+  ADMIN_CONTENT_PAGE_SIZE,
+  buildAdminContentParams,
+  hasActiveAdminContentFilters,
+} from "@/lib/admin-content-filters";
+import type { AdminContentFilters } from "@/lib/admin-content-filters";
 import { useToast } from "@/components/providers/toast-provider";
 import {
   AcademicContext,
@@ -20,14 +26,56 @@ import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Dialog, DialogHeader, DialogTitle, DialogContent, DialogFooter, DialogClose } from "@/components/ui/dialog";
-import { FolderOpen, Plus, Archive, ArrowLeft, Shield, ExternalLink, Download, Pencil } from "lucide-react";
+import { FolderOpen, Plus, Archive, ArrowLeft, Shield, ExternalLink, Download, Pencil, RotateCcw, Search } from "lucide-react";
 
 export default function AdminContentPage() {
   const { user } = useAuth();
-  const { data: contentData, isLoading, refetch } = useContent({ limit: 50 });
+  const [filters, setFilters] = useState<AdminContentFilters>({
+    search: "",
+    subjectId: "",
+    academicContext: "",
+    resourceType: "",
+    sourceType: "",
+  });
+  const [searchInput, setSearchInput] = useState("");
+  const [page, setPage] = useState(1);
+
+  useEffect(() => {
+    const timeout = window.setTimeout(() => {
+      setFilters((current) => ({ ...current, search: searchInput }));
+    }, 250);
+    return () => window.clearTimeout(timeout);
+  }, [searchInput]);
+
+  const updateFilter = <K extends keyof AdminContentFilters,>(
+    key: K,
+    value: AdminContentFilters[K],
+  ) => {
+    setFilters((current) => ({ ...current, [key]: value }));
+    setPage(1);
+  };
+
+  const resetFilters = () => {
+    setSearchInput("");
+    setFilters({
+      search: "",
+      subjectId: "",
+      academicContext: "",
+      resourceType: "",
+      sourceType: "",
+    });
+    setPage(1);
+  };
+
+  const { data: contentData, isLoading, isFetching, refetch } = useContent(
+    buildAdminContentParams(filters, page),
+  );
   const { data: subjects } = useSubjects();
   const { createContent, updateContent, archiveContent } = useContentMutations();
   const { success, error: toastError } = useToast();
+  const activeFilters = hasActiveAdminContentFilters({ ...filters, search: searchInput });
+  const totalResources = contentData?.pagination.total ?? 0;
+  const totalPages = contentData?.pagination.totalPages ?? 0;
 
   const [isCreateOpen, setIsCreateOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
@@ -186,6 +234,8 @@ export default function AdminContentPage() {
   };
 
   const items = contentData?.items ?? [];
+  const firstResource = totalResources === 0 ? 0 : (page - 1) * ADMIN_CONTENT_PAGE_SIZE + 1;
+  const lastResource = Math.min(page * ADMIN_CONTENT_PAGE_SIZE, totalResources);
 
   return (
     <div className="space-y-6">
@@ -210,10 +260,109 @@ export default function AdminContentPage() {
 
       {/* Content Table */}
       <Card>
-        <CardHeader>
+        <CardHeader className="flex flex-row items-center justify-between gap-3">
           <CardTitle className="text-base text-[#17194D]">Published Resources</CardTitle>
+          <span className="text-xs font-medium text-[#667085]">
+            {totalResources} {totalResources === 1 ? "resource" : "resources"}
+          </span>
         </CardHeader>
-        <CardContent>
+        <CardContent className="space-y-5">
+          <div className="grid grid-cols-1 gap-3 rounded-xl border border-[#DCE5F5] bg-[#F7F9FE] p-3 sm:grid-cols-2 sm:p-4 xl:grid-cols-6">
+            <div className="space-y-1.5 sm:col-span-2 xl:col-span-2">
+              <Label htmlFor="content-search" className="text-xs text-[#667085]">Search resources</Label>
+              <div className="relative">
+                <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[#98A2B3]" />
+                <Input
+                  id="content-search"
+                  value={searchInput}
+                  onChange={(event) => {
+                    setSearchInput(event.target.value);
+                    setPage(1);
+                  }}
+                  placeholder="Title or description"
+                  className="pl-9"
+                />
+              </div>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="filter-content-subject" className="text-xs text-[#667085]">Subject</Label>
+              <select
+                id="filter-content-subject"
+                value={filters.subjectId}
+                onChange={(event) => updateFilter("subjectId", event.target.value)}
+                className="h-11 w-full rounded-lg border border-[#DCE5F5] bg-white px-3 text-sm text-[#172033] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#193DA0]"
+              >
+                <option value="">All subjects</option>
+                {subjects?.map((subject) => (
+                  <option key={subject.id} value={subject.id}>{subject.code} · {subject.name}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="filter-content-context" className="text-xs text-[#667085]">Academic context</Label>
+              <select
+                id="filter-content-context"
+                value={filters.academicContext}
+                onChange={(event) => updateFilter("academicContext", event.target.value as AdminContentFilters["academicContext"])}
+                className="h-11 w-full rounded-lg border border-[#DCE5F5] bg-white px-3 text-sm text-[#172033] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#193DA0]"
+              >
+                <option value="">All contexts</option>
+                <option value="LECTURE">Lecture</option>
+                <option value="TUTORIAL">Tutorial</option>
+                <option value="GENERAL">General</option>
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="filter-content-type" className="text-xs text-[#667085]">Resource type</Label>
+              <select
+                id="filter-content-type"
+                value={filters.resourceType}
+                onChange={(event) => updateFilter("resourceType", event.target.value as AdminContentFilters["resourceType"])}
+                className="h-11 w-full rounded-lg border border-[#DCE5F5] bg-white px-3 text-sm text-[#172033] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#193DA0]"
+              >
+                <option value="">All types</option>
+                <option value="PDF">PDF</option>
+                <option value="VIDEO">Video</option>
+                <option value="DOCUMENT">Document</option>
+                <option value="IMAGE">Image</option>
+                <option value="LINK">Link</option>
+                <option value="OTHER">Other</option>
+              </select>
+            </div>
+
+            <div className="space-y-1.5">
+              <Label htmlFor="filter-content-source" className="text-xs text-[#667085]">Source</Label>
+              <select
+                id="filter-content-source"
+                value={filters.sourceType}
+                onChange={(event) => updateFilter("sourceType", event.target.value as AdminContentFilters["sourceType"])}
+                className="h-11 w-full rounded-lg border border-[#DCE5F5] bg-white px-3 text-sm text-[#172033] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#193DA0]"
+              >
+                <option value="">Any source</option>
+                <option value="UPLOAD">Uploaded file</option>
+                <option value="EXTERNAL_LINK">External link</option>
+              </select>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-3">
+              <p className="text-sm text-[#667085]" role="status" aria-live="polite">
+                Showing {firstResource}–{lastResource} of {totalResources} resources
+              </p>
+              {isFetching && !isLoading && <span className="text-xs text-[#667085]">Updating…</span>}
+            </div>
+            {activeFilters && (
+              <Button type="button" variant="ghost" size="sm" onClick={resetFilters} className="gap-1.5">
+                <RotateCcw className="h-3.5 w-3.5" />
+                Reset filters
+              </Button>
+            )}
+          </div>
+
           {isLoading ? (
             <div className="space-y-3">
               {[...Array(5)].map((_, i) => (
@@ -221,9 +370,16 @@ export default function AdminContentPage() {
               ))}
             </div>
           ) : items.length === 0 ? (
-            <div className="text-center py-10">
-              <FolderOpen className="w-8 h-8 text-[#667085] mx-auto mb-2" />
-              <p className="text-sm text-[#667085]">No study materials uploaded yet.</p>
+            <div className="py-10 text-center">
+              <FolderOpen className="mx-auto mb-2 h-8 w-8 text-[#667085]" />
+              <p className="text-sm text-[#667085]">
+                {activeFilters ? "No published resources match these filters." : "No published resources available yet."}
+              </p>
+              {activeFilters && (
+                <Button type="button" variant="ghost" size="sm" onClick={resetFilters} className="mt-2">
+                  Clear filters
+                </Button>
+              )}
             </div>
           ) : (
             <>
@@ -353,6 +509,31 @@ export default function AdminContentPage() {
                 </tbody>
               </table>
               </div>
+              {totalPages > 1 && (
+                <div className="flex flex-col gap-3 border-t border-[#DCE5F5] pt-4 sm:flex-row sm:items-center sm:justify-between">
+                  <span className="text-xs text-[#667085]">Page {page} of {totalPages}</span>
+                  <div className="flex gap-2">
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={page <= 1 || isFetching}
+                      onClick={() => setPage((current) => Math.max(1, current - 1))}
+                    >
+                      Previous
+                    </Button>
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      disabled={page >= totalPages || isFetching}
+                      onClick={() => setPage((current) => Math.min(totalPages, current + 1))}
+                    >
+                      Next
+                    </Button>
+                  </div>
+                </div>
+              )}
             </>
           )}
         </CardContent>

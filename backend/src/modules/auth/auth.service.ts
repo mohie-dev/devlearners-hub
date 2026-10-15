@@ -1,4 +1,4 @@
-import { ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { User } from '../users/entities/user.entity.js';
@@ -7,6 +7,7 @@ import { RegisterDto } from './dto/register.dto.js';
 import { LoginDto } from './dto/login.dto.js';
 import type { JwtPayload } from '../../common/interfaces/jwt-payload.interface.js';
 import { CreateStudentDto } from '../users/dto/create-student.dto.js';
+import { SubjectDepartment, SubjectLevel } from '../../common/enums.js';
 
 @Injectable()
 export class AuthService {
@@ -22,6 +23,13 @@ export class AuthService {
             throw new ConflictException('Email is already registered');
         }
 
+        if (dto.studyLevel >= SubjectLevel.THIRD && !dto.department) {
+            throw new BadRequestException('Department is required for Levels 3 and 4');
+        }
+
+        const department = dto.studyLevel <= SubjectLevel.SECOND
+            ? SubjectDepartment.GENERAL
+            : dto.department!;
         const passwordHash = await bcrypt.hash(dto.password, 12);
 
         let user: User;
@@ -31,7 +39,7 @@ export class AuthService {
                 fullName: dto.fullName.trim(),
                 email,
                 passwordHash,
-                department: dto.department,
+                department,
                 studyLevel: dto.studyLevel,
             };
 

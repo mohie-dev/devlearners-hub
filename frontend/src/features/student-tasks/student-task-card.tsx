@@ -50,7 +50,7 @@ export function StudentTaskCard({
   return (
     <>
       <Card
-        className={`flex flex-col h-full transition-all border ${
+        className={`flex flex-col h-full transition-[border-color,background-color,box-shadow] duration-150 ease-out border ${
           isCompleted
             ? "border-emerald-200/80 bg-white/90 shadow-xs"
             : "border-[#DCE5F5] bg-white hover:shadow-md"
@@ -82,7 +82,7 @@ export function StudentTaskCard({
           </div>
 
           <CardTitle
-            className={`text-base font-semibold transition-all ${
+            className={`text-base font-semibold transition-colors duration-150 ${
               isCompleted ? "line-through text-[#667085]" : "text-[#17194D]"
             }`}
           >

@@ -9,13 +9,13 @@ import {
   CheckSquare,
   User,
   LogOut,
-  GraduationCap,
   Shield,
   FolderOpen,
   ListTodo,
 } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
+import { SiteLogo } from "@/components/layout/site-logo";
 
 const STUDENT_NAV_ITEMS = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -42,16 +42,9 @@ export function Sidebar() {
       {/* Brand Header */}
       <Link
         href={brandHref}
-        aria-label="DevLearners Hub home"
-        className="flex items-center gap-3 px-6 py-6 border-b border-white/10 hover:opacity-90 transition-opacity"
+        className="flex items-center border-b border-white/10 px-5 py-5 transition-opacity hover:opacity-90"
       >
-        <div className="flex items-center justify-center w-10 h-10 rounded-xl bg-[#193DA0] text-[#FFC329] shadow-inner">
-          <GraduationCap className="w-6 h-6" />
-        </div>
-        <div>
-          <h1 className="font-bold text-lg tracking-tight text-white leading-none">DevLearners</h1>
-          <span className="text-xs font-semibold text-[#FFC329] tracking-wider uppercase">Hub</span>
-        </div>
+        <SiteLogo variant="primary-dark" className="h-12 w-auto" />
       </Link>
 
       {/* Navigation Links */}
@@ -72,7 +65,7 @@ export function Sidebar() {
                 key={item.href}
                 href={item.href}
                 className={cn(
-                  "flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                  "flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-[background-color,color,box-shadow] duration-150 ease-out group",
                   isActive
                     ? "bg-[#193DA0] text-white shadow-md shadow-[#193DA0]/20 font-semibold"
                     : "text-slate-300 hover:text-white hover:bg-white/5"
@@ -106,7 +99,7 @@ export function Sidebar() {
                   key={item.href}
                   href={item.href}
                   className={cn(
-                    "flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all group",
+                    "flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-[background-color,color,box-shadow] duration-150 ease-out group",
                     isActive
                       ? "bg-[#193DA0] text-white shadow-md shadow-[#193DA0]/20 font-semibold"
                       : "text-slate-300 hover:text-white hover:bg-white/5"

@@ -24,7 +24,7 @@ export function TaskCard({
   onViewDetails,
 }: TaskCardProps) {
   return (
-    <Card className="flex flex-col h-full hover:shadow-md transition-all hover:border-[#193DA0]/30 group">
+    <Card className="flex flex-col h-full border-[#DCE5F5] transition-[box-shadow,border-color] duration-150 ease-out hover:shadow-md hover:border-[#193DA0]/30 group">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between gap-2 mb-2">
           <Badge variant="department">{task.academicContext}</Badge>
@@ -38,7 +38,7 @@ export function TaskCard({
           )}
         </div>
 
-        <CardTitle className="text-base text-[#17194D] group-hover:text-[#193DA0] transition-colors line-clamp-2">
+        <CardTitle className="text-base text-[#17194D] group-hover:text-[#193DA0] transition-colors duration-150 line-clamp-2">
           {task.title}
         </CardTitle>
       </CardHeader>

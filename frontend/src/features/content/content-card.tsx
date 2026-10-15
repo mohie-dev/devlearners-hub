@@ -47,7 +47,7 @@ export function ContentCard({ content }: ContentCardProps) {
   const fileSize = formatFileSize(content.sizeBytes);
 
   return (
-    <Card className="flex flex-col h-full hover:shadow-md transition-all border-[#DCE5F5] group">
+    <Card className="flex flex-col h-full border-[#DCE5F5] transition-[box-shadow,border-color] duration-150 ease-out hover:shadow-md group">
       <CardHeader className="pb-3">
         <div className="flex items-center justify-between gap-2 mb-2">
           <Badge variant="department">{content.academicContext}</Badge>
@@ -62,7 +62,7 @@ export function ContentCard({ content }: ContentCardProps) {
         </div>
 
         <div className="flex items-start gap-2.5">
-          <div className="p-2 rounded-lg bg-[#F2F5FA] mt-0.5 border border-[#DCE5F5]/60 group-hover:scale-105 transition-transform">
+          <div className="p-2 rounded-lg bg-[#F2F5FA] mt-0.5 border border-[#DCE5F5]/60 transition-colors duration-150">
             {getResourceIcon()}
           </div>
           <div>
@@ -95,7 +95,7 @@ export function ContentCard({ content }: ContentCardProps) {
             <Button
               variant="outline"
               size="sm"
-              className="w-full gap-2 group-hover:bg-[#193DA0] group-hover:text-white transition-all"
+              className="w-full gap-2 group-hover:bg-[#193DA0] group-hover:text-white transition-colors duration-150"
             >
               {content.sourceType === "UPLOAD" ? (
                 <>

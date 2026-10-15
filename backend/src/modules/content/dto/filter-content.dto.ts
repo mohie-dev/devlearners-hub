@@ -1,7 +1,7 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { IsEnum, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from 'class-validator';
-import { AcademicContext, ResourceType } from '../../../common/enums.js';
+import { AcademicContext, ContentSourceType, ResourceType } from '../../../common/enums.js';
 
 export class FilterContentDto {
     @ApiPropertyOptional({ example: 'subject-uuid' })
@@ -18,6 +18,11 @@ export class FilterContentDto {
     @IsOptional()
     @IsEnum(ResourceType)
     resourceType?: ResourceType;
+
+    @ApiPropertyOptional({ enum: ContentSourceType })
+    @IsOptional()
+    @IsEnum(ContentSourceType)
+    sourceType?: ContentSourceType;
 
     @ApiPropertyOptional({ example: 'data structures' })
     @IsOptional()

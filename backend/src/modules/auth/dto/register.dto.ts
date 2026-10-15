@@ -1,6 +1,6 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Transform } from 'class-transformer';
-import { IsEmail, IsEnum, IsIn, IsInt, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsIn, IsInt, IsString, MaxLength, MinLength, ValidateIf } from 'class-validator';
 import { SubjectDepartment, SubjectLevel } from '../../../common/enums.js';
 
 export class RegisterDto {
@@ -38,13 +38,14 @@ export class RegisterDto {
     @MaxLength(72)
     password: string;
 
-    @ApiProperty({
+    @ApiPropertyOptional({
         enum: SubjectDepartment,
         example: SubjectDepartment.CS,
-        description: 'Academic department of the student',
+        description: 'Required for Levels 3 and 4; Levels 1 and 2 are assigned GENERAL automatically',
     })
+    @ValidateIf((dto: RegisterDto) => dto.studyLevel >= SubjectLevel.THIRD)
     @IsEnum(SubjectDepartment)
-    department: SubjectDepartment;
+    department?: SubjectDepartment;
 
     @ApiProperty({
         enum: [SubjectLevel.FIRST, SubjectLevel.SECOND, SubjectLevel.THIRD, SubjectLevel.FOURTH],

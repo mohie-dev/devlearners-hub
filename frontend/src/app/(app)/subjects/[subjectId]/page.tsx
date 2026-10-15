@@ -91,7 +91,7 @@ function SubjectDetailContent({ subjectId }: { subjectId: string }) {
         <div className="grid grid-cols-2 gap-1 border-b border-[#DCE5F5] pb-px sm:flex sm:items-center sm:gap-2">
           <button
             onClick={() => setActiveTab("content")}
-            className={`flex min-w-0 w-full items-center justify-center gap-1.5 px-2 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer sm:w-auto sm:gap-2 sm:px-4 sm:text-sm ${
+            className={`flex min-w-0 w-full items-center justify-center gap-1.5 px-2 py-2.5 text-xs font-semibold border-b-2 transition-colors duration-150 ease-out cursor-pointer sm:w-auto sm:gap-2 sm:px-4 sm:text-sm ${
               activeTab === "content"
                 ? "border-[#193DA0] text-[#193DA0]"
                 : "border-transparent text-[#667085] hover:text-[#172033]"
@@ -103,7 +103,7 @@ function SubjectDetailContent({ subjectId }: { subjectId: string }) {
           </button>
           <button
             onClick={() => setActiveTab("tasks")}
-            className={`flex min-w-0 w-full items-center justify-center gap-1.5 px-2 py-2.5 text-xs font-semibold border-b-2 transition-all cursor-pointer sm:w-auto sm:gap-2 sm:px-4 sm:text-sm ${
+            className={`flex min-w-0 w-full items-center justify-center gap-1.5 px-2 py-2.5 text-xs font-semibold border-b-2 transition-colors duration-150 ease-out cursor-pointer sm:w-auto sm:gap-2 sm:px-4 sm:text-sm ${
               activeTab === "tasks"
                 ? "border-[#193DA0] text-[#193DA0]"
                 : "border-transparent text-[#667085] hover:text-[#172033]"
