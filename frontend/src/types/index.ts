@@ -75,6 +75,12 @@ export interface ContentItem {
   createdAt: string;
   updatedAt: string;
   subject?: Subject;
+  tags?: SubjectTag[];
+}
+
+export interface SubjectTag {
+  id: string;
+  name: string;
 }
 
 export interface PaginatedContentResponse {
@@ -93,6 +99,7 @@ export interface FilterContentParams {
   resourceType?: ResourceType;
   sourceType?: ContentSourceType;
   search?: string;
+  tagIds?: string[];
   page?: number;
   limit?: number;
 }
@@ -104,6 +111,7 @@ export interface CreateContentDto {
   resourceType: ResourceType;
   sourceType: ContentSourceType;
   subjectId: string;
+  tagIds?: string[];
   resourceUrl?: string;
   status?: ContentStatus;
 }
@@ -114,7 +122,12 @@ export interface UpdateContentDto {
   academicContext?: AcademicContext;
   status?: ContentStatus;
   subjectId?: string;
+  tagIds?: string[];
   resourceUrl?: string;
+}
+
+export interface CreateSubjectTagDto {
+  name: string;
 }
 
 // Subjects

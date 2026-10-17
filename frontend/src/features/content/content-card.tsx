@@ -82,6 +82,13 @@ export function ContentCard({ content }: ContentCardProps) {
         <p className="text-sm text-[#667085] line-clamp-3 leading-relaxed">
           {content.description || "No description provided for this resource."}
         </p>
+        {content.tags && content.tags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {content.tags.map((tag) => (
+              <Badge key={tag.id} variant="outline">{tag.name}</Badge>
+            ))}
+          </div>
+        )}
       </CardContent>
 
       <CardFooter className="pt-3 border-t border-[#DCE5F5]/40">

@@ -57,6 +57,7 @@ export class ContentService {
                 status,
                 publishedAt: status === ContentStatus.PUBLISHED ? new Date() : null,
                 subject,
+                tags,
                 createdBy: { id: user.id } as User,
             });
 

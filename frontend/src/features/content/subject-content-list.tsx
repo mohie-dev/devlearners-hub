@@ -2,6 +2,7 @@
 
 import React, { useState } from "react";
 import { useSubjectContent } from "@/hooks/use-content";
+import { useSubjectTags } from "@/hooks/use-subject-tags";
 import { ContentCard } from "./content-card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Button } from "@/components/ui/button";
@@ -17,11 +18,19 @@ interface SubjectContentListProps {
 export function SubjectContentList({ subjectId }: SubjectContentListProps) {
   const [filters, setFilters] = useState<FilterContentParams>({ page: 1, limit: 9 });
   const { data, isLoading, isError, error, refetch } = useSubjectContent(subjectId, filters);
+  const {
+    data: tags,
+    isLoading: isTagsLoading,
+    isError: tagsError,
+  } = useSubjectTags(subjectId);
   const items = data?.items ?? [];
   const pagination = data?.pagination;
   const currentPage = filters.page ?? 1;
   const hasActiveFilters = Boolean(
-    filters.search?.trim() || filters.academicContext || filters.resourceType,
+    filters.search?.trim() ||
+      filters.academicContext ||
+      filters.resourceType ||
+      filters.tagIds?.length,
   );
 
   const updateFilters = (updates: Partial<FilterContentParams>, resetPage = true) => {
@@ -39,7 +48,7 @@ export function SubjectContentList({ subjectId }: SubjectContentListProps) {
   return (
     <div className="space-y-6">
       <div className="rounded-xl border border-[#DCE5F5] bg-white p-4 shadow-xs">
-        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
           <div className="space-y-1.5">
             <Label htmlFor="content-search">Search materials</Label>
             <div className="relative">
@@ -95,6 +104,40 @@ export function SubjectContentList({ subjectId }: SubjectContentListProps) {
               <option value="LINK">Link</option>
               <option value="OTHER">Other</option>
             </select>
+          </div>
+
+          <div className="space-y-1.5">
+            <p className="text-sm font-medium text-[#172033]">Topics / tags</p>
+            <div
+              id="content-tag-filter"
+              className="max-h-28 space-y-1 overflow-y-auto rounded-lg border border-[#DCE5F5] bg-white p-2"
+            >
+              {tagsError ? (
+                <p role="alert" className="text-xs text-red-600">
+                  Could not load tags for this subject.
+                </p>
+              ) : isTagsLoading ? (
+                <p className="text-xs text-[#667085]">Loading tags…</p>
+              ) : tags?.length ? tags.map((tag) => (
+                <label key={tag.id} className="flex items-center gap-2 text-sm text-[#172033]">
+                  <input
+                    type="checkbox"
+                    checked={filters.tagIds?.includes(tag.id) ?? false}
+                    onChange={(event) =>
+                      updateFilters({
+                        tagIds: event.target.checked
+                          ? [...(filters.tagIds ?? []), tag.id]
+                          : (filters.tagIds ?? []).filter((id) => id !== tag.id),
+                      })
+                    }
+                    className="accent-[#193DA0]"
+                  />
+                  {tag.name}
+                </label>
+              )) : (
+                <p className="text-xs text-[#667085]">No tags available.</p>
+              )}
+            </div>
           </div>
         </div>
 

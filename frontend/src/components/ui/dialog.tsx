@@ -8,9 +8,10 @@ interface DialogProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
   children: React.ReactNode;
+  className?: string;
 }
 
-export function Dialog({ open, onOpenChange, children }: DialogProps) {
+export function Dialog({ open, onOpenChange, children, className }: DialogProps) {
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === "Escape" && open) {
@@ -35,22 +36,41 @@ export function Dialog({ open, onOpenChange, children }: DialogProps) {
         className="fixed inset-0 bg-black/40 backdrop-blur-xs transition-opacity animate-in fade-in duration-200 motion-reduce:animate-none motion-reduce:transition-none"
         onClick={() => onOpenChange(false)}
       />
-      <div className="relative z-50 w-full max-w-lg bg-white rounded-2xl border border-[#DCE5F5] shadow-xl overflow-hidden animate-in zoom-in-95 duration-200 motion-reduce:animate-none max-h-[90vh] flex flex-col">
+      <div
+        className={cn(
+          "relative z-50 flex max-h-[90vh] w-full max-w-lg flex-col overflow-hidden rounded-2xl border border-[#DCE5F5] bg-white shadow-xl animate-in zoom-in-95 duration-200 motion-reduce:animate-none",
+          className,
+        )}
+      >
         {children}
       </div>
     </div>
   );
 }
 
-export function DialogHeader({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function DialogHeader({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("px-6 py-4 border-b border-[#DCE5F5] flex items-center justify-between", className)} {...props}>
+    <div
+      className={cn(
+        "flex items-center justify-between border-b border-[#DCE5F5] px-4 py-4 sm:px-6",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </div>
   );
 }
 
-export function DialogTitle({ className, children, ...props }: React.HTMLAttributes<HTMLHeadingElement>) {
+export function DialogTitle({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLHeadingElement>) {
   return (
     <h3 className={cn("text-lg font-semibold text-[#17194D]", className)} {...props}>
       {children}
@@ -58,7 +78,11 @@ export function DialogTitle({ className, children, ...props }: React.HTMLAttribu
   );
 }
 
-export function DialogContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function DialogContent({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
     <div className={cn("p-6 overflow-y-auto space-y-4", className)} {...props}>
       {children}
@@ -66,9 +90,19 @@ export function DialogContent({ className, children, ...props }: React.HTMLAttri
   );
 }
 
-export function DialogFooter({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
+export function DialogFooter({
+  className,
+  children,
+  ...props
+}: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <div className={cn("px-6 py-4 bg-[#F2F5FA] border-t border-[#DCE5F5] flex justify-end gap-3", className)} {...props}>
+    <div
+      className={cn(
+        "flex justify-end gap-3 border-t border-[#DCE5F5] bg-[#F2F5FA] px-4 py-4 sm:px-6",
+        className,
+      )}
+      {...props}
+    >
       {children}
     </div>
   );
@@ -77,6 +111,8 @@ export function DialogFooter({ className, children, ...props }: React.HTMLAttrib
 export function DialogClose({ onClose }: { onClose: () => void }) {
   return (
     <button
+      type="button"
+      aria-label="Close dialog"
       onClick={onClose}
       className="text-[#667085] hover:text-[#172033] p-1.5 rounded-lg hover:bg-[#F2F5FA] transition-colors"
     >

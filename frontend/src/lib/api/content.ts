@@ -16,6 +16,7 @@ export const contentApi = {
         resourceType: params?.resourceType,
         sourceType: params?.sourceType,
         search: params?.search,
+        tagIds: params?.tagIds?.join(","),
         page: params?.page,
         limit: params?.limit,
       },
@@ -34,6 +35,7 @@ export const contentApi = {
     formData.append("resourceType", dto.resourceType);
     formData.append("sourceType", dto.sourceType);
     formData.append("subjectId", dto.subjectId);
+    if (dto.tagIds?.length) formData.append("tagIds", JSON.stringify(dto.tagIds));
     if (dto.resourceUrl) formData.append("resourceUrl", dto.resourceUrl);
     if (dto.status) formData.append("status", dto.status);
 

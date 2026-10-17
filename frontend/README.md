@@ -29,6 +29,33 @@ A production-ready educational SaaS frontend for **DevLearners Hub**, built with
   - Priority task preview and quick action navigation.
 - **Student Profile:**
   - Clean view of registered academic profile details (Name, Email, Role, Department, Study Level).
+- **Study Content Discovery:**
+  - Search published materials by title or description within a subject.
+  - Filter by academic context, resource format, and one or more subject tags.
+  - Matching multiple tags uses an "any selected tag" rule.
+- **Admin Content Management:**
+  - Search and filter published resources by subject, context, format, source, and subject tags.
+  - Create subject-specific tags inline while adding or editing a resource.
+  - Upload supported files up to 20 MB or add an external resource URL.
+  - Save resources as drafts or publish them immediately; edit and archive published resources.
+  - The upload dialog keeps its actions visible while the form scrolls and provides file validation and selection feedback.
+
+## Managing Study Content
+
+Admins can open **Manage Content** and choose **Upload Content** to add a resource:
+
+1. Enter a searchable title and choose the subject and academic context.
+2. Optionally select existing subject tags or add a new tag. Tags are scoped to the selected subject.
+3. Choose **Upload a file** or **Add an external link**.
+4. For uploads, choose a matching format and select a supported file no larger than 20 MB:
+   - **PDF:** PDF files.
+   - **Document:** Word, PowerPoint, Excel, or plain-text files.
+   - **Image:** JPEG, PNG, or WebP images.
+5. Optionally add a description and choose whether to publish immediately or save as a draft.
+
+The upload and edit dialogs use a scrollable form area with a persistent action bar. A selected file can be replaced or removed before saving. Invalid file sizes and format mismatches are reported before the upload is submitted.
+
+Students can search published materials by title or description and combine context, resource-format, and tag filters on a subject page. When several tags are selected, a resource matches if it has **at least one** of those tags.
 
 ## Brand Identity & Design System
 
@@ -55,6 +82,7 @@ frontend/
 │   │   │   └── register/page.tsx
 │   │   ├── (app)/
 │   │   │   ├── layout.tsx
+│   │   │   ├── admin/content/page.tsx
 │   │   │   ├── dashboard/page.tsx
 │   │   │   ├── subjects/
 │   │   │   │   ├── page.tsx
@@ -82,6 +110,10 @@ frontend/
 │   │       ├── dialog.tsx
 │   │       └── skeleton.tsx
 │   ├── features/
+│   │   ├── content/
+│   │   │   ├── content-card.tsx
+│   │   │   ├── content-tag-selector.tsx
+│   │   │   └── subject-content-list.tsx
 │   │   ├── auth/
 │   │   │   ├── login-form.tsx
 │   │   │   └── register-form.tsx

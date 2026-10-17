@@ -11,6 +11,7 @@ export interface AdminContentFilters {
   academicContext: AcademicContext | "";
   resourceType: ResourceType | "";
   sourceType: ContentSourceType | "";
+  tagIds: string[];
 }
 
 export const ADMIN_CONTENT_PAGE_SIZE = 20;
@@ -27,6 +28,7 @@ export function buildAdminContentParams(
     ...(filters.academicContext ? { academicContext: filters.academicContext } : {}),
     ...(filters.resourceType ? { resourceType: filters.resourceType } : {}),
     ...(filters.sourceType ? { sourceType: filters.sourceType } : {}),
+    ...(filters.tagIds.length ? { tagIds: filters.tagIds } : {}),
     page,
     limit: ADMIN_CONTENT_PAGE_SIZE,
   };
@@ -38,6 +40,7 @@ export function hasActiveAdminContentFilters(filters: AdminContentFilters): bool
       filters.subjectId ||
       filters.academicContext ||
       filters.resourceType ||
-      filters.sourceType,
+      filters.sourceType ||
+      filters.tagIds.length > 0,
   );
 }

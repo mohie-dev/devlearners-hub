@@ -22,6 +22,7 @@ test("builds a trimmed content query with selected filters and pagination", () =
         academicContext: "LECTURE",
         resourceType: "PDF",
         sourceType: "UPLOAD",
+        tagIds: ["tag-1"],
       },
       3,
     ),
@@ -31,6 +32,7 @@ test("builds a trimmed content query with selected filters and pagination", () =
       academicContext: "LECTURE",
       resourceType: "PDF",
       sourceType: "UPLOAD",
+      tagIds: ["tag-1"],
       page: 3,
       limit: 20,
     },
@@ -44,9 +46,11 @@ test("omits blank filters and reports whether filters are active", () => {
     academicContext: "",
     resourceType: "",
     sourceType: "",
+    tagIds: [],
   };
 
   assert.deepEqual(buildAdminContentParams(filters, 1), { page: 1, limit: 20 });
   assert.equal(hasActiveAdminContentFilters(filters), false);
   assert.equal(hasActiveAdminContentFilters({ ...filters, resourceType: "PDF" }), true);
+  assert.equal(hasActiveAdminContentFilters({ ...filters, tagIds: ["tag-1"] }), true);
 });
