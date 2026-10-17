@@ -1,114 +1,266 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# DevLearners Hub API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+NestJS REST API for the DevLearners Hub academic learning platform. The API provides public discovery of subjects, published learning content, and coursework, alongside authenticated student task tracking and role-protected administration.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Technology
 
-## Description
+- Node.js, TypeScript, and NestJS 12
+- PostgreSQL with TypeORM 1.x and explicit migrations
+- JWT bearer authentication using Passport; bcrypt password hashing
+- DTO validation with `class-validator` and `class-transformer`
+- Swagger/OpenAPI documentation
+- Cloudinary for uploaded study resources
+- Vitest for unit and end-to-end test runners; Oxlint for linting
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## Modules
 
-## Project setup
+| Module | Responsibility |
+| --- | --- |
+| `auth` | Student registration and login; JWT issue and validation |
+| `users` | User persistence and profile operations |
+| `me` | Current user profile and student task-list endpoints |
+| `subjects` | Subject discovery, search, filtering, creation, updates, and archiving |
+| `subject-tags` | Subject-scoped tag creation, listing, updates, and deletion |
+| `content` | Published content search/filtering, pagination, file/link creation, updates, archiving |
+| `tasks` | Public task browsing and admin task CRUD/publication lifecycle |
+| `student-tasks` | Student-specific task-list entries and progress |
+| `cloudinary` | Admin-only upload integration and file validation |
 
-```bash
-$ npm install
+Shared authorization decorators and guards, the response interceptor, exception filter, and common DTOs live in `src/common`.
+
+## Requirements
+
+- Node.js 20 or later and npm.
+- PostgreSQL database.
+- Cloudinary account for the upload integration.
+
+## Configuration
+
+Create `backend/.env` in local development. The app requires the following configuration:
+
+```dotenv
+NODE_ENV=development
+PORT=3000
+API_PREFIX=api/v1
+DATABASE_URL=postgresql://postgres:your-password@localhost:5432/devlearners_hub
+DATABASE_SSL=false
+JWT_SECRET=replace-with-a-random-secret-at-least-32-characters-long
+CLOUDINARY_CLOUD_NAME=your-cloud-name
+CLOUDINARY_API_KEY=your-api-key
+CLOUDINARY_API_SECRET=your-api-secret
 ```
 
-## Compile and run the project
+| Variable | Required | Description |
+| --- | --- | --- |
+| `DATABASE_URL` | Yes | PostgreSQL connection URL |
+| `JWT_SECRET` | Yes | JWT signing secret; minimum 32 characters |
+| `CLOUDINARY_CLOUD_NAME` | Yes | Cloudinary account cloud name |
+| `CLOUDINARY_API_KEY` | Yes | Cloudinary API key |
+| `CLOUDINARY_API_SECRET` | Yes | Cloudinary API secret |
+| `NODE_ENV` | No | `development`, `production`, or `test`; defaults to `development` |
+| `PORT` | No | HTTP port; defaults to `3000` |
+| `API_PREFIX` | No | API route prefix; defaults to `api/v1` |
+| `DATABASE_SSL` | No | Set to `false` to disable PostgreSQL SSL; otherwise SSL is enabled |
+
+Use a strong random JWT secret and keep `.env` files and credentials out of source control. The default SSL configuration is suitable for hosted PostgreSQL; local PostgreSQL commonly uses `DATABASE_SSL=false`.
+
+## Setup and run
 
 ```bash
-# development
-$ npm run start
-
-# watch mode
-$ npm run start:dev
-
-# production mode
-$ npm run start:prod
+npm install
 ```
 
-## Run tests
+Create the PostgreSQL database named in `DATABASE_URL`, then apply all migrations:
 
 ```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
+npm run db:migration:run
 ```
 
-## Deployment
-
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
-
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+Run the API in watch mode:
 
 ```bash
-$ npm install -g @nestjs/mau
-$ mau deploy
+npm run start:dev
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+The default API base URL is `http://localhost:3000/api/v1`. Swagger UI is served at `http://localhost:3000/api/docs`.
 
-## Observability
+### Create the first admin
 
-In production applications, observability is essential for understanding how your system behaves, detecting issues early, and maintaining reliable performance.
+The seed script reads the following values from the environment:
 
-[NestJS Observe](https://observe.nestjs.com) automatically instruments your NestJS application, giving you deep visibility into your system with minimal setup:
+```dotenv
+ADMIN_EMAIL=admin@example.com
+ADMIN_FULL_NAME=DevLearners Admin
+ADMIN_PASSWORD=replace-with-a-strong-password
+```
 
-- **Distributed tracing:** Follow requests across services and understand how they flow through your system.
-- **Waterfall analysis:** Visualize request execution and identify slow operations, bottlenecks, and unexpected delays.
-- **Performance analysis:** Analyze application performance in real time and quickly pinpoint areas that need optimization.
-- **Metrics:** Track key application and infrastructure metrics to understand system health and performance trends.
-- **Logging:** Centralize and correlate logs with traces and other telemetry to make debugging easier.
-- **Error tracking:** Detect errors quickly and investigate their root causes with the surrounding context.
-- **SLA monitoring:** Track service-level objectives and identify when your application is approaching or exceeding defined thresholds.
-- **Alarms and alerts:** Set up alerts for critical errors, performance degradation, SLA violations, and other anomalies so your team can react quickly.
+The password must be between 8 and 72 characters. Run:
 
-## Resources
+```bash
+npm run seed:admin
+```
 
-Check out a few resources that may come in handy when working with NestJS:
+The script creates an admin when the email is new, does nothing when an admin with that email already exists, and promotes an existing non-admin account with that email to `ADMIN`. Protect this operation and its environment variables accordingly.
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Auto-instrument your application with [NestJS Observer](https://observer.nestjs.com). Distributed tracing, metrics, and logging made easy. Error tracking and performance monitoring for your NestJS applications.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+## API reference
 
-## Support
+All route paths below are relative to the configured API prefix (`/api/v1` by default). Use Swagger UI for request DTOs, response schemas, and the full OpenAPI contract.
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Authentication
 
-## Stay in touch
+| Method | Route | Access | Description |
+| --- | --- | --- | --- |
+| `POST` | `/auth/register` | Public | Register a student and return a bearer token |
+| `POST` | `/auth/login` | Public | Authenticate and return a bearer token |
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+Registration always creates a student account. Passwords are stored as bcrypt hashes. Access tokens are currently issued with a 15-minute expiry.
 
-## License
+### Current user and student tasks
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+| Method | Route | Access | Description |
+| --- | --- | --- | --- |
+| `GET` | `/me` | Authenticated | Get the caller's profile |
+| `PATCH` | `/me` | Authenticated | Update the caller's profile |
+| `GET` | `/me/tasks` | Student | List tasks in the caller's personal list |
+| `POST` | `/me/tasks` | Student | Add a published task to the personal list |
+| `PATCH` | `/me/tasks/:taskId/progress` | Student | Update personal progress (`PENDING` or `COMPLETED`) |
+| `DELETE` | `/me/tasks/:taskId` | Student | Remove a task from the personal list |
+
+The current user ID comes from the access token, not a client-supplied user ID. Student task endpoints reject admin accounts.
+
+### Subjects and tags
+
+| Method | Route | Access | Description |
+| --- | --- | --- | --- |
+| `GET` | `/subjects` | Public | List active subjects |
+| `GET` | `/subjects/:id` | Public | Get an active subject |
+| `POST` | `/subjects` | Admin | Create a subject |
+| `PATCH` | `/subjects/:id` | Admin | Update a subject |
+| `PATCH` | `/subjects/:id/archive` | Admin | Archive a subject |
+| `GET` | `/subjects/:subjectId/tags` | Public | List tags for an active subject |
+| `POST` | `/subjects/:subjectId/tags` | Admin | Create a subject tag |
+| `PATCH` | `/subjects/:subjectId/tags/:tagId` | Admin | Rename a subject tag |
+| `DELETE` | `/subjects/:subjectId/tags/:tagId` | Admin | Delete a subject tag |
+
+Subject list filters: `search`, `department` (`CS`, `IS`, `IT`, `GENERAL`), and `level` (`1`–`4`). Tag names are unique within their subject. Content can only be assigned tags belonging to its subject.
+
+### Content
+
+| Method | Route | Access | Description |
+| --- | --- | --- | --- |
+| `GET` | `/content` | Public | Search and paginate published content |
+| `GET` | `/content/:id` | Public | Get a published content item |
+| `POST` | `/content` | Admin | Create content from an upload or external URL |
+| `PATCH` | `/content/:id` | Admin | Update content metadata, tags, or publication status |
+| `PATCH` | `/content/:id/archive` | Admin | Archive content |
+
+Content list filters:
+
+| Query parameter | Meaning |
+| --- | --- |
+| `search` | Case-insensitive match against title or description (up to 150 characters) |
+| `subjectId` | Limit to a subject UUID |
+| `academicContext` | `LECTURE`, `TUTORIAL`, or `GENERAL` |
+| `resourceType` | `PDF`, `VIDEO`, `DOCUMENT`, `IMAGE`, `LINK`, or `OTHER` |
+| `sourceType` | `UPLOAD` or `EXTERNAL_LINK` |
+| `tagIds` | One or more UUIDs; comma-separated or repeated query values |
+| `page` | 1-based page number; defaults to `1` |
+| `limit` | Page size from `1` to `50`; defaults to `20` |
+
+When multiple tag IDs are provided, content matches **any** selected tag. Results include subject and tag relations and are ordered by publication date, then creation date.
+
+`POST /content` accepts `multipart/form-data`:
+
+- For `sourceType=UPLOAD`, include exactly one `file` (maximum 20 MB) and do not send `resourceUrl`.
+- For `sourceType=EXTERNAL_LINK`, provide `resourceUrl` and do not send a file.
+- Optional `tagIds` are IDs of tags belonging to the selected subject.
+- Supported upload formats include PDF, Word, PowerPoint, Excel, plain text, JPEG, PNG, and WebP. Uploaded format must match the declared resource type where the type has a file mapping.
+- `status` can be `DRAFT` or `PUBLISHED` at creation. Public endpoints return published content only.
+
+### Tasks
+
+| Method | Route | Access | Description |
+| --- | --- | --- | --- |
+| `GET` | `/tasks/browse?subjectId=:id` | Public | Browse published tasks for an active subject |
+| `POST` | `/tasks` | Admin | Create a task (starts as draft) |
+| `GET` | `/tasks` | Admin | List tasks across statuses |
+| `GET` | `/tasks/:id` | Admin | Get task details |
+| `PATCH` | `/tasks/:id` | Admin | Update task fields/status |
+| `DELETE` | `/tasks/:id` | Admin | Delete a task |
+
+Task fields include subject, title, description, academic context, optional due date, optional related content, and status. Updating status to `PUBLISHED` makes a task available through the public browse endpoint.
+
+### Cloudinary
+
+| Method | Route | Access | Description |
+| --- | --- | --- | --- |
+| `POST` | `/cloudinary/upload` | Admin | Upload one supported file (maximum 20 MB) |
+
+Content creation can upload the file directly as part of `POST /content`; the standalone endpoint is also available for integrations.
+
+## Response format and validation
+
+Successful API responses use a common envelope:
+
+```json
+{
+  "status": "success",
+  "code": 200,
+  "data": {}
+}
+```
+
+Errors use:
+
+```json
+{
+  "status": "error",
+  "code": 400,
+  "data": {
+    "message": "Request validation failed"
+  }
+}
+```
+
+Global request validation transforms DTO values and rejects unknown properties rather than silently accepting them. UUID path parameters are validated. A global rate limiter is configured for 100 requests per 60 seconds.
+
+## Database and migrations
+
+TypeORM schema synchronization is disabled. Use the migration scripts for all schema changes:
+
+```bash
+npm run db:migration:show
+npm run db:migration:run
+npm run db:migration:revert
+npm run db:migration:generate -- src/migrations/AddYourChange
+```
+
+The migration commands build the project before invoking TypeORM. Migrations are stored in `src/migrations`; the TypeORM CLI data source loads compiled entities and migrations from `dist/`.
+
+## Tests, lint, and build
+
+```bash
+npm run build
+npm run lint
+npm test
+npm run test:watch
+npm run test:cov
+npm run test:e2e
+```
+
+`npm test` runs the Vitest unit suite. `npm run test:e2e` uses `vitest.config.e2e.ts`. Set up an isolated test database and the required environment values before running integration tests.
+
+## Production notes
+
+- Configure `NODE_ENV=production`, a strong `JWT_SECRET`, production PostgreSQL credentials, and Cloudinary credentials in the hosting provider's secret manager.
+- Use TLS/SSL for hosted PostgreSQL; do not disable database SSL in production.
+- Run `npm run build`, apply committed migrations with `npm run db:migration:run`, then start with `npm run start:prod`.
+- Keep secrets out of source control and avoid exposing administrative seed credentials in build logs.
+- Configure `API_PREFIX` and the frontend `NEXT_PUBLIC_API_BASE_URL` consistently.
+
+## Project references
+
+- [Project overview and local full-stack setup](../README.md)
+- [Frontend README](../frontend/README.md)
+- [NestJS documentation](https://docs.nestjs.com/)
+- [TypeORM migrations](https://typeorm.io/migrations)
