@@ -5,6 +5,7 @@ import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard.js';
 import { AddStudentTaskDto } from '../student-tasks/dto/add-student-task.dto.js';
 import { UpdateStudentTaskProgressDto } from '../student-tasks/dto/update-student-task-progress.dto.js';
 import { MeService } from './me.service.js';
+import { UpdateMyProfileDto } from '../users/dto/update-my-profile.dto.js';
 
 @ApiTags('Me')
 @ApiBearerAuth()
@@ -84,4 +85,18 @@ export class MeController {
     ): Promise<void> {
         await this.meService.removeTask(userId, taskId);
     }
+
+
+    @Patch()
+    @ApiOperation({ summary: 'Update the current authenticated user profile' })
+    @ApiResponse({ status: 200, description: 'Profile updated successfully' })
+    @ApiBadRequestResponse({ description: 'Invalid profile data' })
+    @ApiUnauthorizedResponse({ description: 'Missing or invalid access token' })
+    updateProfile(
+        @CurrentUser('id') userId: string,
+        @Body() dto: UpdateMyProfileDto,
+    ) {
+        return this.meService.updateProfile(userId, dto);
+    }
+
 }

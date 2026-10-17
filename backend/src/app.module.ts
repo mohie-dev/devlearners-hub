@@ -1,4 +1,4 @@
-import { APP_INTERCEPTOR } from '@nestjs/core';
+import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService, } from '@nestjs/config';
 import { TypeOrmModule, TypeOrmModuleOptions, } from '@nestjs/typeorm';
@@ -16,6 +16,7 @@ import { CloudinaryModule } from './modules/cloudinary/cloudinary.module.js';
 import { MeModule } from './modules/me/me.module.js';
 import { StudentTasksModule } from './modules/student-tasks/student-tasks.module.js';
 import { SubjectTagsModule } from './modules/subject-tags/subject-tags.module.js';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -41,6 +42,12 @@ import { SubjectTagsModule } from './modules/subject-tags/subject-tags.module.js
           'database',
         ),
     }),
+    ThrottlerModule.forRoot([
+      {
+        ttl: 60_000,
+        limit: 100,
+      },
+    ]),
     AuthModule,
     MeModule,
     UsersModule,
@@ -57,6 +64,10 @@ import { SubjectTagsModule } from './modules/subject-tags/subject-tags.module.js
     {
       provide: APP_INTERCEPTOR,
       useClass: TransformResponseInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: ThrottlerGuard,
     },
   ],
 })

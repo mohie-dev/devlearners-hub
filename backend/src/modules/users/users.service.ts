@@ -23,4 +23,19 @@ export class UsersService {
         const user = this.usersRepository.create(dto);
         return this.usersRepository.save(user);
     }
+
+
+    async updateProfile(
+        id: string,
+        dto: { fullName: string },
+    ): Promise<User | null> {
+        const user = await this.usersRepository.findOneBy({ id });
+
+        if (!user) return null;
+
+        user.fullName = dto.fullName;
+
+        return this.usersRepository.save(user);
+    }
+
 }
