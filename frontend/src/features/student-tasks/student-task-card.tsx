@@ -6,8 +6,9 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { RemoveTaskDialog } from "./remove-task-dialog";
-import { Clock, CheckCircle2, RotateCcw, Trash2, BookOpen } from "lucide-react";
+import { Clock, CheckCircle2, RotateCcw, Trash2, BookOpen, Eye } from "lucide-react";
 import { formatDate } from "@/lib/utils";
+import { StudentTaskDetailDialog } from "./student-task-detail-dialog";
 
 interface StudentTaskCardProps {
   studentTask: StudentTask;
@@ -21,6 +22,7 @@ export function StudentTaskCard({
   onRemoveTask,
 }: StudentTaskCardProps) {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const [isDetailsOpen, setIsDetailsOpen] = useState(false);
   const [isUpdating, setIsUpdating] = useState(false);
   const [isRemoving, setIsRemoving] = useState(false);
 
@@ -103,7 +105,17 @@ export function StudentTaskCard({
           </div>
         </CardContent>
 
-        <CardFooter className="pt-3 border-t border-[#DCE5F5]/40">
+        <CardFooter className="flex-col gap-2 border-t border-[#DCE5F5]/40 pt-3">
+          <Button
+            type="button"
+            variant="outline"
+            size="sm"
+            className="w-full gap-1.5"
+            onClick={() => setIsDetailsOpen(true)}
+          >
+            <Eye className="h-4 w-4" />
+            View task details
+          </Button>
           <Button
             variant={isCompleted ? "outline" : "primary"}
             size="sm"
@@ -132,6 +144,11 @@ export function StudentTaskCard({
         onConfirm={handleConfirmRemove}
         taskTitle={task.title}
         isRemoving={isRemoving}
+      />
+      <StudentTaskDetailDialog
+        studentTask={studentTask}
+        open={isDetailsOpen}
+        onOpenChange={setIsDetailsOpen}
       />
     </>
   );
