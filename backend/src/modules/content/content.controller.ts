@@ -74,6 +74,14 @@ export class ContentController {
                 resourceUrl: { type: 'string', example: 'https://www.youtube.com/playlist?list=example' },
                 status: { type: 'string', enum: ['DRAFT', 'PUBLISHED', 'ARCHIVED'] },
                 file: { type: 'string', format: 'binary' },
+                tagIds: {
+                    type: 'array',
+                    items: {
+                        type: 'string',
+                        format: 'uuid',
+                    },
+                    description: 'Optional IDs of tags belonging to the selected subject',
+                },
             },
         },
     })

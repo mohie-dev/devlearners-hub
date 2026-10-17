@@ -1,6 +1,7 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsOptional, IsString, IsUrl, MaxLength, MinLength, ValidateIf } from 'class-validator';
+import { ArrayUnique, IsArray, IsEnum, IsNotEmpty, IsOptional, IsString, IsUrl, IsUUID, MaxLength, MinLength, ValidateIf } from 'class-validator';
 import { AcademicContext, ContentSourceType, ContentStatus, ResourceType } from '../../../common/enums.js';
+import { Transform } from 'class-transformer';
 
 export class CreateContentDto {
     @ApiProperty({ example: 'Introduction to Data Structures' })
@@ -46,4 +47,45 @@ export class CreateContentDto {
     @IsOptional()
     @IsEnum(ContentStatus)
     status?: ContentStatus;
+
+    @ApiPropertyOptional({
+        type: [String],
+        format: 'uuid',
+        description: 'IDs of tags belonging to the selected subject',
+        example: ['550e8400-e29b-41d4-a716-446655440000'],
+    })
+    @IsOptional()
+    @Transform(({ value }) => {
+        if (value === undefined || value === null || value === '') {
+            return undefined;
+        }
+
+        if (Array.isArray(value)) {
+            return value;
+        }
+
+        if (typeof value === 'string') {
+            const normalized = value.trim();
+
+            if (normalized.startsWith('[')) {
+                try {
+                    const parsed: unknown = JSON.parse(normalized);
+
+                    if (Array.isArray(parsed)) {
+                        return parsed;
+                    }
+                } catch {
+                    return [normalized];
+                }
+            }
+
+            return [normalized];
+        }
+
+        return value;
+    })
+    @IsArray()
+    @ArrayUnique()
+    @IsUUID('all', { each: true })
+    tagIds?: string[];
 }

@@ -1,5 +1,5 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { IsEnum, IsOptional, IsString, IsUrl, MaxLength, MinLength, IsUUID } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsUrl, MaxLength, MinLength, IsUUID, IsArray, ArrayUnique } from 'class-validator';
 import { AcademicContext, ContentStatus } from '../../../common/enums.js';
 
 export class UpdateContentDto {
@@ -36,4 +36,16 @@ export class UpdateContentDto {
     @IsOptional()
     @IsEnum(ContentStatus)
     status?: ContentStatus;
+
+    @ApiPropertyOptional({
+        type: [String],
+        format: 'uuid',
+        description: 'Replaces the current tags. Send an empty array to remove all tags.',
+        example: ['550e8400-e29b-41d4-a716-446655440000'],
+    })
+    @IsOptional()
+    @IsArray()
+    @ArrayUnique()
+    @IsUUID('all', { each: true })
+    tagIds?: string[];
 }

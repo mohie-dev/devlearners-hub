@@ -15,6 +15,7 @@ import { AuthModule } from './modules/auth/auth.module.js';
 import { CloudinaryModule } from './modules/cloudinary/cloudinary.module.js';
 import { MeModule } from './modules/me/me.module.js';
 import { StudentTasksModule } from './modules/student-tasks/student-tasks.module.js';
+import { SubjectTagsModule } from './modules/subject-tags/subject-tags.module.js';
 
 @Module({
   imports: [
@@ -47,7 +48,8 @@ import { StudentTasksModule } from './modules/student-tasks/student-tasks.module
     ContentModule,
     TasksModule,
     StudentTasksModule,
-    CloudinaryModule
+    CloudinaryModule,
+    SubjectTagsModule
   ],
   controllers: [AppController],
   providers: [

@@ -10,13 +10,16 @@ import { ContentItem } from './entities/content-item.entity.js';
 import { CreateContentDto } from './dto/create-content.dto.js';
 import { FilterContentDto } from './dto/filter-content.dto.js';
 import { UpdateContentDto } from './dto/update-content.dto.js';
+import { SubjectTagsService } from '../subject-tags/subject-tags.service.js';
 
 @Injectable()
 export class ContentService {
     constructor(
-        @InjectRepository(ContentItem) private readonly contentRepository: Repository<ContentItem>,
+        @InjectRepository(ContentItem)
+        private readonly contentRepository: Repository<ContentItem>,
         private readonly subjectsService: SubjectsService,
         private readonly cloudinaryService: CloudinaryService,
+        private readonly subjectTagsService: SubjectTagsService,
     ) { }
 
     async create(dto: CreateContentDto, user: CurrentUserData, file?: Express.Multer.File): Promise<ContentItem> {
@@ -30,6 +33,10 @@ export class ContentService {
         }
 
         const subject = await this.subjectsService.findOne(dto.subjectId);
+        const tags = await this.subjectTagsService.findByIdsForSubject(
+            subject.id,
+            dto.tagIds ?? [],
+        );
         let uploadedFile: Awaited<ReturnType<CloudinaryService['uploadFile']>> | undefined;
 
         if (file) uploadedFile = await this.cloudinaryService.uploadFile(file);
@@ -71,6 +78,7 @@ export class ContentService {
         const { page = 1, limit = 20 } = query;
         const qb = this.contentRepository.createQueryBuilder('content')
             .leftJoinAndSelect('content.subject', 'subject')
+            .leftJoinAndSelect('content.tags', 'tag')
             .where('content.status = :status', { status: ContentStatus.PUBLISHED });
 
         if (query.subjectId) qb.andWhere('subject.id = :subjectId', { subjectId: query.subjectId });
@@ -81,6 +89,17 @@ export class ContentService {
             qb.andWhere('(content.title ILIKE :search OR content.description ILIKE :search)', {
                 search: `%${query.search.trim()}%`,
             });
+        }
+        if (query.tagIds?.length) {
+            qb.andWhere(
+                `EXISTS (
+                SELECT 1
+                FROM content_item_tags content_tag_filter
+                WHERE content_tag_filter.content_item_id = content.id
+                AND content_tag_filter.subject_tag_id IN (:...tagIds)
+                )`,
+                { tagIds: query.tagIds },
+            );
         }
 
         const [items, total] = await qb
@@ -126,15 +145,40 @@ export class ContentService {
 
         const content = await this.contentRepository.findOne({
             where: { id },
-            relations: { subject: true },
+            relations: {
+                subject: true,
+                tags: true
+            },
         });
+
 
         if (!content) throw new NotFoundException('Content not found');
         if (content.status === ContentStatus.ARCHIVED) {
             throw new BadRequestException('Archived content cannot be updated');
         }
 
-        if (dto.subjectId) content.subject = await this.subjectsService.findOne(dto.subjectId);
+        const currentSubjectId = content.subject.id;
+
+        const targetSubject = dto.subjectId ? await this.subjectsService.findOne(dto.subjectId) : content.subject;
+
+        if (dto.tagIds !== undefined) {
+            content.tags = await this.subjectTagsService.findByIdsForSubject(
+                targetSubject.id,
+                dto.tagIds,
+            );
+        } else if (
+            targetSubject.id !== currentSubjectId &&
+            content.tags.length > 0
+        ) {
+            throw new BadRequestException(
+                'Provide tagIds when changing the subject of content that has tags',
+            );
+        }
+
+        if (dto.subjectId !== undefined) {
+            content.subject = targetSubject;
+        }
+
         if (dto.title !== undefined) content.title = dto.title.trim();
         if (dto.description !== undefined) content.description = dto.description?.trim() || null;
         if (dto.academicContext !== undefined) content.academicContext = dto.academicContext;

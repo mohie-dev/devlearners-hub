@@ -1,6 +1,6 @@
 import { ApiPropertyOptional } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
-import { IsEnum, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { ArrayUnique, IsArray, IsEnum, IsInt, IsOptional, IsString, IsUUID, Max, MaxLength, Min } from 'class-validator';
 import { AcademicContext, ContentSourceType, ResourceType } from '../../../common/enums.js';
 
 export class FilterContentDto {
@@ -13,6 +13,31 @@ export class FilterContentDto {
     @IsOptional()
     @IsEnum(AcademicContext)
     academicContext?: AcademicContext;
+
+    @ApiPropertyOptional({
+        type: [String],
+        format: 'uuid',
+        description: 'Filter content by one or more tag IDs. Matches any selected tag.',
+        example: ['550e8400-e29b-41d4-a716-446655440000'],
+    })
+    @IsOptional()
+    @Transform(({ value }) => {
+        if (value === undefined || value === null || value === '') {
+            return undefined;
+        }
+
+        const values = Array.isArray(value) ? value : [value];
+
+        return values.flatMap((item) =>
+            typeof item === 'string'
+                ? item.split(',').map((id) => id.trim())
+                : [item],
+        );
+    })
+    @IsArray()
+    @ArrayUnique()
+    @IsUUID('all', { each: true })
+    tagIds?: string[];
 
     @ApiPropertyOptional({ enum: ResourceType })
     @IsOptional()

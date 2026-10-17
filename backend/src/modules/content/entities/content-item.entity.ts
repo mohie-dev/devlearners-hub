@@ -1,8 +1,9 @@
-import { Column, Entity, Index, JoinColumn, ManyToOne } from 'typeorm';
+import { Column, Entity, Index, JoinColumn, JoinTable, ManyToMany, ManyToOne } from 'typeorm';
 import { BaseEntity } from '../../../common/entities/base.entity.js';
 import { AcademicContext, ContentSourceType, ContentStatus, ResourceType } from '../../../common/enums.js';
 import { Subject } from '../../subjects/entities/subject.entity.js';
 import { User } from '../../users/entities/user.entity.js';
+import { SubjectTag } from '../../subject-tags/entities/subject-tag.entity.js';
 
 @Entity({ name: 'content_items' })
 @Index('IDX_content_items_subject_status', ['subject', 'status'])
@@ -50,4 +51,18 @@ export class ContentItem extends BaseEntity {
     @ManyToOne(() => User, { nullable: false, onDelete: 'RESTRICT' })
     @JoinColumn({ name: 'created_by' })
     createdBy: User;
+
+    @ManyToMany(() => SubjectTag, (tag) => tag.contentItems)
+    @JoinTable({
+        name: 'content_item_tags',
+        joinColumn: {
+            name: 'content_item_id',
+            referencedColumnName: 'id',
+        },
+        inverseJoinColumn: {
+            name: 'subject_tag_id',
+            referencedColumnName: 'id',
+        },
+    })
+    tags: SubjectTag[];
 }
